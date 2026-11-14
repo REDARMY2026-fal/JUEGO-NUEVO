@@ -56,27 +56,107 @@ html{scroll-behavior:smooth}body{background:radial-gradient(ellipse at 15% -10%,
 @media(max-width:700px){.lobby-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.lobby-card{padding:18px}}
 @media(max-width:420px){.lobby-grid{grid-template-columns:1fr}.ideology-card{min-height:0}}
 
+
+/* Correcciones de interfaz y navegación 0.5 */
+html,body{height:100%;overflow:hidden}
+.app{height:100dvh;max-height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+.top,.metrics,.footer{flex-shrink:0}
+.layout{flex:1;min-height:0;overflow:hidden}
+.sidebar{height:100%;max-height:100%;overflow-y:auto;overscroll-behavior:contain}
+.main{height:100%;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-gutter:stable;padding:0 7px 18px 0}
+.main::-webkit-scrollbar,.sidebar::-webkit-scrollbar{width:8px}
+.main::-webkit-scrollbar-thumb,.sidebar::-webkit-scrollbar-thumb{background:#40556a;border-radius:8px}
+.lobby[hidden]{display:none!important}
+.lobby{position:fixed;inset:0;z-index:1000;display:block;overflow:auto;padding:0;background:#0b121b;color:#e8eef4}
+.lobby-shell{min-height:100%;display:grid;grid-template-columns:82px minmax(0,1fr);background:radial-gradient(ellipse at 75% 0%,#263c50 0,#101c29 52%,#0b121b 100%)}
+.lobby-rail{background:#0a121b;border-right:1px solid #2b4053;display:flex;align-items:center;flex-direction:column;padding:24px 8px;gap:12px}
+.lobby-mark{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:#244c61;border:1px solid #53758a;color:#fff;font-weight:900;font-size:17px}
+.lobby-rail-label{font-size:9px;line-height:1.5;letter-spacing:.12em;text-align:center;font-weight:800}
+.lobby-rail-bottom{margin-top:auto;color:#8094a7;font-size:8px;line-height:1.6;text-align:center;letter-spacing:.1em}
+.lobby-main{max-width:1250px;width:100%;margin:auto;padding:24px clamp(18px,4vw,54px) 18px}
+.lobby-top{display:flex;justify-content:space-between;color:#a7b7c6;font-size:10px;letter-spacing:.16em;border-bottom:1px solid #34485b;padding-bottom:13px}
+.lobby-version{color:#d7b56c}
+.lobby-welcome{padding:25px 0 22px;max-width:650px}
+.lobby-eyebrow,.lobby-section-title{color:#d9b56c;font-size:10px;font-weight:800;letter-spacing:.17em}
+.lobby-welcome h1{font-size:clamp(34px,5vw,58px);line-height:.96;letter-spacing:-.04em;margin:10px 0 12px}
+.lobby-welcome p{max-width:560px;color:#aebdca;font-size:13px;margin:0}
+.lobby-columns{display:grid;grid-template-columns:minmax(250px,.8fr) minmax(400px,1.2fr);gap:18px}
+.lobby-primary,.lobby-setup{background:#142333;border:1px solid #344a60;border-radius:13px;padding:18px;min-width:0}
+.lobby-section-title{margin-bottom:13px}
+.lobby-choice{width:100%;display:flex;align-items:center;gap:12px;text-align:left;padding:14px;border-radius:9px;border:1px solid #3a5065;background:#1b3043;margin:8px 0;color:#edf3f7}
+.lobby-choice:hover{background:#243c52;border-color:#6b91a5}
+.lobby-choice.new{border-color:#8a7046;background:#2c2b29}
+.lobby-choice b,.lobby-choice small{display:block}.lobby-choice b{font-size:13px}.lobby-choice small{font-size:10px;color:#a9bac8;margin-top:3px}
+.lobby-choice>strong{margin-left:auto;color:#d9b56c;font-size:19px}
+.choice-icon{width:34px;height:34px;border-radius:8px;background:#29465c;display:grid;place-items:center;font-size:17px}
+.lobby-info{font-size:10px;color:#91a5b8;margin-top:13px;line-height:1.5}
+.lobby-label{display:block;color:#b9c7d2;font-size:10px;margin:10px 0 5px}
+.lobby-setup input{width:100%;background:#0e1a26;color:#f0f4f8;border:1px solid #40576c;border-radius:7px;padding:10px;font:inherit;font-size:12px;outline:none}
+.lobby-setup input:focus{border-color:#d9b56c;box-shadow:0 0 0 2px #d9b56c22}
+.ideology-heading{margin-top:17px}
+.lobby-ideologies{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.lobby-ideologies .ideology-card{min-height:72px;padding:9px;border-radius:8px;background:#1a2c3d;border:1px solid #344b60;text-align:left;color:#edf3f7}
+.lobby-ideologies .ideology-card b{display:block;font-size:10px;margin-bottom:4px}
+.lobby-ideologies .ideology-card small{display:block;color:#9fb0bf;font-size:9px;line-height:1.35}
+.lobby-ideologies .ideology-card.selected{border-color:#d9b56c;background:#303344;box-shadow:inset 0 0 0 1px #d9b56c}
+.lobby-hint{font-size:10px;color:#92a5b7;margin:10px 0 0}
+.lobby-footer{display:flex;justify-content:space-between;color:#71869a;font-size:9px;letter-spacing:.12em;padding:14px 2px 0}
+.chart-legend{gap:15px}
+.chart-legend span{display:inline-flex;align-items:center;gap:6px}
+.chart-legend i{width:19px;height:3px;border-radius:3px;background:#79c8d2;display:inline-block}
+.chart-legend i.parallel{background:#e6b75c}
+.chart-legend i.official{background:#79c8d2}
+.macro-kpis{grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.macro-kpi{background:linear-gradient(145deg,#1b3042,#142333);border-radius:10px;padding:12px;border-color:#344b60}
+.macro-kpi b{font-size:19px;margin-top:4px}
+@media(max-width:900px){.lobby-columns{grid-template-columns:1fr}.lobby-main{max-width:760px}.lobby-welcome{padding:18px 0}.lobby-primary{order:2}}
+@media(max-width:700px){
+ html,body{overflow:hidden}.app{padding:8px}.layout{display:flex;flex-direction:column;gap:7px}
+ .sidebar{height:auto;max-height:none;overflow-x:auto;overflow-y:hidden;padding:5px;flex-shrink:0}
+ .nav{display:flex;gap:4px;width:max-content}.nav button{white-space:nowrap;padding:8px 10px;font-size:11px}
+ .side-note{display:none}.main{flex:1;min-height:0;height:auto;padding-right:4px}
+ .lobby-shell{grid-template-columns:48px minmax(0,1fr)}.lobby-rail{padding:16px 4px}.lobby-mark{width:34px;height:34px;font-size:13px}.lobby-rail-label{font-size:7px}.lobby-rail-bottom{font-size:6px}
+ .lobby-main{padding:15px 12px}.lobby-columns{grid-template-columns:1fr}.lobby-primary{order:0}.lobby-setup{order:1}.lobby-ideologies{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .lobby-footer{font-size:7px}.macro-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:430px){.lobby-ideologies{grid-template-columns:1fr 1fr}.lobby-top{font-size:8px}}
+
 </style>
 </head>
 <body>
-<div class="lobby" id="lobby" hidden><div class="lobby-card">
- <div class="lobby-eyebrow">SIMULADOR POLÍTICO · ARGENTINA</div>
- <h1 class="lobby-title">RECONSTRUCCIÓN<br>NACIONAL</h1>
- <p class="lobby-copy">Un país no se reconstruye con una sola decisión. Elegí un rumbo político, administrá recursos, negociá con los sectores sociales y enfrentá las consecuencias de cada gobierno.</p>
- <h3>Elegí la orientación ideológica de tu gobierno</h3>
- <p class="sub">La ideología define prioridades y modifica gradualmente los efectos de tus políticas. No determina automáticamente todas tus decisiones.</p>
- <div class="lobby-grid" id="ideologyChoices">
-  <button class="ideology-card selected" data-ideology="socialdemocracy"><b>Socialdemocracia</b><small>Estado de bienestar, servicios públicos, regulación y mercado mixto.</small></button>
-  <button class="ideology-card" data-ideology="liberalism"><b>Liberalismo</b><small>Competencia, apertura comercial, iniciativa privada y disciplina fiscal.</small></button>
-  <button class="ideology-card" data-ideology="developmentalism"><b>Desarrollismo</b><small>Industria nacional, infraestructura, inversión y planificación estratégica.</small></button>
-  <button class="ideology-card" data-ideology="conservatism"><b>Conservadurismo</b><small>Orden institucional, gradualismo, tradición y estabilidad presupuestaria.</small></button>
-  <button class="ideology-card" data-ideology="socialism"><b>Socialismo democrático</b><small>Redistribución, empresas públicas, derechos laborales y planificación social.</small></button>
-  <button class="ideology-card" data-ideology="nationalism"><b>Nacionalismo económico</b><small>Soberanía productiva, protección de sectores estratégicos y mercado interno.</small></button>
+<div class="lobby" id="lobby" hidden>
+ <div class="lobby-shell">
+  <aside class="lobby-rail"><div class="lobby-mark">RN</div><div class="lobby-rail-label">RECONSTRUCCIÓN<br>NACIONAL</div><div class="lobby-rail-bottom">ARGENTINA<br>SIMULADOR POLÍTICO</div></aside>
+  <div class="lobby-main">
+   <div class="lobby-top"><span>INICIO DE GESTIÓN</span><span class="lobby-version">CAMPAÑA NACIONAL · 01</span></div>
+   <div class="lobby-welcome"><div class="lobby-eyebrow">REPÚBLICA ARGENTINA</div><h1>RECONSTRUÍ<br>EL FUTURO.</h1><p>Administrá la economía, conducí tu gobierno y definí el rumbo del país. Cada decisión deja consecuencias.</p></div>
+   <div class="lobby-columns">
+    <section class="lobby-primary">
+     <div class="lobby-section-title">TU PARTIDA</div>
+     <button class="lobby-choice continue" id="lobbyContinue" type="button"><span class="choice-icon">▶</span><span><b>Continuar partida</b><small>Retomá tu última gestión guardada</small></span><strong>→</strong></button>
+     <button class="lobby-choice new" id="lobbyNew" type="button"><span class="choice-icon">＋</span><span><b>Nueva campaña</b><small>Comenzá una reconstrucción desde cero</small></span><strong>→</strong></button>
+     <div class="lobby-info" id="lobbyNote">La partida se guarda en este navegador.</div>
+    </section>
+    <section class="lobby-setup">
+     <div class="lobby-section-title">IDENTIDAD DE GOBIERNO</div>
+     <label class="lobby-label" for="lobbyGovernment">Nombre del partido o coalición</label><input id="lobbyGovernment" maxlength="36" value="Gobierno Nacional" autocomplete="off" spellcheck="false">
+     <label class="lobby-label" for="lobbyPresident">Nombre del presidente</label><input id="lobbyPresident" maxlength="28" value="Presidente/a" autocomplete="off" spellcheck="false">
+     <div class="lobby-section-title ideology-heading">ORIENTACIÓN IDEOLÓGICA</div>
+     <div class="lobby-ideologies" id="ideologyChoices">
+      <button class="ideology-card selected" data-ideology="socialdemocracy" type="button"><b>Socialdemocracia</b><small>Bienestar y economía mixta</small></button>
+      <button class="ideology-card" data-ideology="liberalism" type="button"><b>Liberalismo</b><small>Mercado y competencia</small></button>
+      <button class="ideology-card" data-ideology="developmentalism" type="button"><b>Desarrollismo</b><small>Industria e infraestructura</small></button>
+      <button class="ideology-card" data-ideology="conservatism" type="button"><b>Conservadurismo</b><small>Orden y gradualismo</small></button>
+      <button class="ideology-card" data-ideology="socialism" type="button"><b>Socialismo democrático</b><small>Redistribución y derechos</small></button>
+      <button class="ideology-card" data-ideology="nationalism" type="button"><b>Nacionalismo económico</b><small>Soberanía productiva</small></button>
+     </div>
+     <p class="lobby-hint">La orientación modifica prioridades y algunos efectos de la gestión. Podrás tomar decisiones distintas durante la partida.</p>
+    </section>
+   </div>
+   <div class="lobby-footer"><span>UN PAÍS. MUCHOS CAMINOS. TUS DECISIONES.</span><span>VERSIÓN EN DESARROLLO</span></div>
+  </div>
  </div>
- <div class="detail-grid"><div class="detail"><small>Nombre del gobierno</small><input id="lobbyGovernment" maxlength="36" value="Gobierno Nacional" style="width:100%;margin-top:6px"></div><div class="detail"><small>Presidencia</small><input id="lobbyPresident" maxlength="28" value="Presidente/a" style="width:100%;margin-top:6px"></div></div>
- <div class="lobby-actions" style="margin-top:16px"><button class="btn primary" id="lobbyContinue">Continuar partida →</button><button class="btn" id="lobbyNew">Comenzar nueva campaña</button></div>
- <p class="lobby-note" id="lobbyNote">Tu partida se guarda localmente en este navegador. La nueva campaña reemplazará el guardado actual solo si confirmás.</p>
- </div></div>
+</div>
 <div class="app">
 <header class="top">
  <div class="brand"><div class="flag"></div><div><h1>RECONSTRUCCIÓN NACIONAL</h1><small>SIMULADOR DE GESTIÓN · ARGENTINA</small></div></div>
@@ -136,11 +216,11 @@ html{scroll-behavior:smooth}body{background:radial-gradient(ellipse at 15% -10%,
    <div class="panel"><div class="section-kicker">Tablero macroeconómico</div><h3 style="margin-top:5px">Precios, empleo y mercado cambiario</h3><p class="sub">Los datos se actualizan al cerrar cada trimestre. Las líneas muestran la evolución de tu partida.</p><div class="macro-kpis" id="macroKpis"></div></div>
    <div class="macro-grid">
     <div class="panel chart-panel"><h3>Inflación trimestral</h3><div class="chart-wrap" id="chartInflation"></div><div class="chart-legend"><span><i></i> Variación de precios por trimestre</span></div></div>
-    <div class="panel chart-panel"><h3>Precios y salarios acumulados</h3><div class="chart-wrap" id="chartWages"></div><div class="chart-legend"><span><i></i> Índice de precios</span><span style="color:var(--gold)">— Índice salarial</span></div></div>
-    <div class="panel chart-panel"><h3>Mercado cambiario</h3><div class="chart-wrap" id="chartFx"></div><div class="chart-legend"><span><i></i> Dólar oficial</span><span>— Dólar paralelo</span></div></div>
-    <div class="panel chart-panel"><h3>Desempleo</h3><div class="chart-wrap" id="chartJobs"></div><div class="chart-legend"><span><i></i> Desocupación estimada de la población activa</span></div></div>
-    <div class="panel chart-panel"><h3>Empleo formal</h3><div class="chart-wrap" id="chartFormal"></div><div class="chart-legend"><span><i></i> Participación del empleo registrado</span></div></div>
-    <div class="panel chart-panel"><h3>Reservas internacionales</h3><div class="chart-wrap" id="chartReserves"></div><div class="chart-legend"><span><i></i> Reservas (USD M)</span></div></div>
+    <div class="panel chart-panel"><h3>Precios y salarios acumulados</h3><div class="chart-wrap" id="chartWages"></div><div class="chart-legend"><span><i class="official"></i> Índice de precios</span><span><i class="parallel"></i> Índice salarial</span></div></div>
+    <div class="panel chart-panel"><h3>Mercado cambiario</h3><div class="chart-wrap" id="chartFx"></div><div class="chart-legend"><span><i class="official"></i> Dólar oficial</span><span><i class="parallel"></i> Dólar paralelo</span></div></div>
+    <div class="panel chart-panel"><h3>Desempleo</h3><div class="chart-wrap" id="chartJobs"></div><div class="chart-legend"><span><i class="official"></i> Desocupación estimada de la población activa</span></div></div>
+    <div class="panel chart-panel"><h3>Empleo formal</h3><div class="chart-wrap" id="chartFormal"></div><div class="chart-legend"><span><i class="official"></i> Participación del empleo registrado</span></div></div>
+    <div class="panel chart-panel"><h3>Reservas internacionales</h3><div class="chart-wrap" id="chartReserves"></div><div class="chart-legend"><span><i class="official"></i> Reservas (USD M)</span></div></div>
    </div>
    <div class="panel"><div class="section-kicker">Instrumentos de política económica</div><h3 style="margin-top:5px">Decisiones macroeconómicas</h3><div class="macro-actions">
     <button class="macro-action" data-macro="stabilize"><b>🧊 Programa antiinflacionario</b><small>Costo $450 M · reduce inflación gradualmente, con enfriamiento inicial de actividad.</small></button>
@@ -490,24 +570,31 @@ ensureMacroState();const renderBeforeMacro=render;render=function(){renderBefore
 /* Lobby, identidad de gobierno e ideologías */
 const ideologyNames={socialdemocracy:"Socialdemocracia",liberalism:"Liberalismo",developmentalism:"Desarrollismo",conservatism:"Conservadurismo",socialism:"Socialismo democrático",nationalism:"Nacionalismo económico"};
 let selectedIdeology="socialdemocracy";
+let pendingNewCampaign=false;
 function openLobby(){
  selectedIdeology=s.ideology||"socialdemocracy";
  document.querySelectorAll("[data-ideology]").forEach(b=>b.classList.toggle("selected",b.dataset.ideology===selectedIdeology));
  $("lobbyGovernment").value=s.party||"Gobierno Nacional";$("lobbyPresident").value=s.president||"Presidente/a";
- $("lobbyContinue").hidden=!s.turns&&!localStorage.getItem("rn_save_v1");
- $("lobbyNote").textContent=s.turns||localStorage.getItem("rn_save_v1")?"Podés continuar tu partida. Una nueva campaña reemplazará el guardado actual únicamente después de confirmar.":"Elegí una orientación y comenzá tu primera campaña.";
+ const hasSave=!!localStorage.getItem("rn_save_v1")||Number(s.turns)>0;
+ $("lobbyContinue").hidden=!hasSave;
+ $("lobbyNote").textContent=hasSave?"Hay una gestión guardada en este navegador. Podés retomarla o iniciar otra campaña.":"Todavía no hay una partida guardada. Configurá tu gobierno y comenzá una campaña.";
  $("lobby").hidden=false;
+}
+function beginNewCampaign(){
+ s=initial();s.ideology=selectedIdeology;s.ideologySetup=true;
+ s.party=$("lobbyGovernment").value.trim().slice(0,36)||"Gobierno Nacional";
+ s.president=$("lobbyPresident").value.trim().slice(0,28)||"Presidente/a";
+ log("Inicio de campaña","Se formó "+s.party+" bajo una orientación de "+ideologyNames[s.ideology]+". Comienza la reconstrucción nacional.");
+ saveSilent();$("confirm").classList.add("hidden");$("lobby").hidden=true;showView("overview");render();toast("Nueva campaña iniciada correctamente.");
 }
 document.querySelectorAll("[data-ideology]").forEach(b=>b.addEventListener("click",()=>{selectedIdeology=b.dataset.ideology;document.querySelectorAll("[data-ideology]").forEach(x=>x.classList.toggle("selected",x===b))}));
 $("lobbyBtn").addEventListener("click",openLobby);
-$("lobbyContinue").addEventListener("click",()=>{$("lobby").hidden=true;render()});
-$("lobbyNew").addEventListener("click",()=>{
- const hasSave=!!localStorage.getItem("rn_save_v1");
- if(hasSave&&!confirm("¿Comenzar una campaña nueva? Esto reemplazará el guardado local actual. Exportá tu partida antes si querés conservarla."))return;
- s=initial();s.ideology=selectedIdeology;s.ideologySetup=true;s.party=($("lobbyGovernment").value.trim()||"Gobierno Nacional");s.president=($("lobbyPresident").value.trim()||"Presidente/a");
- log("Inicio de campaña","Se formó "+s.party+" bajo una orientación de "+ideologyNames[s.ideology]+". Comienza la reconstrucción nacional.");
- save();$("lobby").hidden=true;render();toast("Nueva campaña iniciada.");
-});
+$("lobbyContinue").addEventListener("click",()=>{const raw=localStorage.getItem("rn_save_v1");if(raw){try{s=Object.assign(initial(),JSON.parse(raw))}catch(e){toast("No se pudo leer el guardado. La partida actual sigue disponible.");return}}$("lobby").hidden=true;showView("overview");render();toast("Partida cargada.");});
+$("lobbyNew").addEventListener("click",()=>{pendingNewCampaign=true;if(localStorage.getItem("rn_save_v1")){$("confirm").classList.remove("hidden")}else beginNewCampaign()});
+$("cancelReset").addEventListener("click",()=>{pendingNewCampaign=false;$("confirm").classList.add("hidden")});
+$("confirmReset").addEventListener("click",()=>{if(pendingNewCampaign){pendingNewCampaign=false;beginNewCampaign();return}s=initial();log("Inicio de gestión","Se conformó un nuevo gobierno nacional.");saveSilent();$("confirm").classList.add("hidden");render();toast("Nueva partida creada.")});
+["lobbyGovernment","lobbyPresident"].forEach(id=>$(id).addEventListener("input",e=>{e.target.value=e.target.value.replace(/[<>\u0000-\u001f]/g,"")}));
+
 function ideologyDescription(){
  const d={socialdemocracy:"Estado de bienestar y economía mixta",liberalism:"Competencia, apertura y sector privado",developmentalism:"Industria, infraestructura e inversión",conservatism:"Orden institucional y gradualismo",socialism:"Redistribución y planificación social",nationalism:"Soberanía productiva y mercado interno"};
  return d[s.ideology]||d.socialdemocracy;
