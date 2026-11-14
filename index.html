@@ -162,7 +162,7 @@ html{scroll-behavior:smooth}body{background:radial-gradient(ellipse at 15% -10%,
   </section>
  </main>
 </div>
-<div class="footer">RECONSTRUCCIÓN NACIONAL · PROTOTIPO JUGABLE 0.1 · SIMULACIÓN FICTICIA CON FINES LÚDICOS</div>
+<div class="footer">RECONSTRUCCIÓN NACIONAL · VERSIÓN 0.2 · PROTOTIPO EN EVOLUCIÓN · SIMULACIÓN FICTICIA CON FINES LÚDICOS</div>
 </div>
 <div class="overlay hidden" id="tutorial"><div class="modal"><div class="tutorial-step" id="tStep">TUTORIAL · 1/5</div><h2 id="tTitle">Bienvenido al gobierno</h2><p id="tText"></p><div class="progress"><i id="tProgress" style="width:20%"></i></div><div class="modal-actions"><button class="btn" id="tSkip">Saltar tutorial</button><button class="btn primary" id="tNext">Siguiente →</button></div></div></div>
 <div class="overlay hidden" id="confirm"><div class="modal"><h2>¿Empezar una nueva partida?</h2><p>Se reemplazará el progreso guardado en este navegador. Esta acción no se puede deshacer.</p><div class="modal-actions"><button class="btn" id="cancelReset">Cancelar</button><button class="btn warn" id="confirmReset">Crear nueva partida</button></div></div></div>
@@ -392,6 +392,7 @@ document.addEventListener("click",function(e){
 const previousRender=render;
 render=function(){previousRender();financeRender()};
 if(!s.objectives.length)s.objectives=makeObjectives();
+render();
 
 })();
 </script>
