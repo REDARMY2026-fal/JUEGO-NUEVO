@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101a27"><title>Reconstrucción Nacional</title>
+<style>
+:root{--bg:#0b121b;--panel:#131f2d;--panel2:#192839;--line:#2a3c50;--text:#e8eef5;--muted:#91a4b8;--green:#4dc49a;--gold:#e6b75c;--red:#e27676;--blue:#6fa9df;--shadow:0 12px 30px #0004}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#233a50 0,#0b121b 55%);color:var(--text);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button{font:inherit;cursor:pointer;color:inherit}button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}.app{max-width:1500px;margin:auto;padding:18px}.top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}.brand{display:flex;align-items:center;gap:12px}.flag{width:42px;height:28px;border-radius:5px;background:linear-gradient(#79b9e8 0 33%,#f4f1e8 33% 66%,#79b9e8 66%);box-shadow:0 2px 8px #0005;position:relative}.flag:after{content:"☀";position:absolute;inset:0;display:grid;place-items:center;color:#d8a944;font-size:12px}.brand h1{font-size:17px;letter-spacing:.07em;margin:0}.brand small{color:var(--muted);display:block;font-size:11px;letter-spacing:.13em}.top-actions{display:flex;gap:8px;align-items:center}.btn{border:1px solid var(--line);background:#1a2a3b;padding:9px 12px;border-radius:9px;font-weight:650;transition:.15s}.btn:hover{background:#263b50;transform:translateY(-1px)}.btn.primary{background:#236b58;border-color:#3b987c}.btn.primary:hover{background:#2b8069}.btn.warn{border-color:#8b6340;background:#483522}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}.date{font-size:12px;color:var(--muted);padding:8px 10px;border:1px solid var(--line);border-radius:8px}.metrics{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-bottom:14px}.metric,.panel,.section-card{background:linear-gradient(145deg,#172637,#111c29);border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow)}.metric{padding:12px 13px;min-width:0}.metric label{font-size:10px;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);display:block}.metric strong{font-size:21px;display:block;margin:3px 0 1px;font-variant-numeric:tabular-nums}.metric small{font-size:11px;color:var(--muted)}.layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:13px}.sidebar{padding:10px;height:max-content;position:sticky;top:12px}.nav{display:grid;gap:5px}.nav button{text-align:left;border:0;background:transparent;color:#aebdca;padding:11px 12px;border-radius:8px;font-weight:600}.nav button:hover,.nav button.active{background:#24394d;color:#fff}.nav button.active{box-shadow:inset 3px 0 var(--green)}.side-note{border-top:1px solid var(--line);margin-top:12px;padding:12px 7px 4px;color:var(--muted);font-size:11px}.main{min-width:0}.view{display:none}.view.active{display:block}.view-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin:2px 0 12px}.view-head h2{margin:0;font-size:21px}.view-head p{margin:4px 0 0;color:var(--muted);font-size:12px}.grid2{display:grid;grid-template-columns:1.25fr 1fr;gap:12px}.panel{padding:15px;margin-bottom:12px;min-width:0}.panel h3{font-size:14px;margin:0 0 12px}.sub{color:var(--muted);font-size:11px}.bar{height:8px;background:#263747;border-radius:99px;overflow:hidden;margin:7px 0 3px}.bar span{display:block;height:100%;border-radius:99px;background:var(--green)}.bar.gold span{background:var(--gold)}.bar.red span{background:var(--red)}.bar.blue span{background:var(--blue)}.statline{display:flex;justify-content:space-between;gap:12px;font-size:12px;margin:10px 0 0}.statline b{font-variant-numeric:tabular-nums}.event{display:flex;gap:10px;padding:10px 0;border-top:1px solid #263849}.event:first-of-type{border-top:0}.event-icon{width:28px;height:28px;display:grid;place-items:center;border-radius:8px;background:#24394a;flex-shrink:0}.event strong{font-size:12px}.event p{margin:2px 0 0;color:var(--muted);font-size:11px}.action-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.action{padding:11px;border:1px solid var(--line);background:#192b3d;border-radius:9px;text-align:left}.action:hover{border-color:#5a8c9a;background:#20374b}.action b{display:block;font-size:12px}.action span{display:block;color:var(--muted);font-size:10px;margin-top:3px}.province-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px}.province{border:1px solid #38516a;background:#1b3043;border-radius:8px;padding:9px 5px;text-align:center;min-height:65px}.province:hover,.province.selected{border-color:var(--gold);background:#314255}.province b{display:block;font-size:11px}.province small{color:var(--muted);font-size:9px}.province .dot{width:6px;height:6px;border-radius:50%;display:inline-block;background:var(--green);margin-right:4px}.detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.detail{padding:10px;background:#1b2c3c;border-radius:8px}.detail small{color:var(--muted);display:block;font-size:10px}.detail b{font-size:15px}.table{width:100%;border-collapse:collapse;font-size:12px}.table th,.table td{text-align:left;padding:10px 7px;border-bottom:1px solid #293b4e}.table th{color:var(--muted);font-weight:600;font-size:10px;text-transform:uppercase}.table tr:last-child td{border-bottom:0}.tag{font-size:10px;padding:3px 7px;border-radius:20px;background:#243b4e;color:#b9d2e7}.good{color:var(--green)}.bad{color:var(--red)}.gold{color:var(--gold)}.muted{color:var(--muted)}.decision{border:1px solid #665538;background:#2b2a25;padding:13px;border-radius:10px;margin-bottom:10px}.decision h4{margin:0 0 5px}.decision p{margin:0 0 10px;color:#c0b9a8;font-size:12px}.decision button{margin:3px}.log{max-height:330px;overflow:auto}.log-item{padding:8px 0;border-bottom:1px solid #263849;font-size:12px}.log-item small{color:var(--muted);display:block}.toast{position:fixed;bottom:18px;right:18px;background:#20394a;border:1px solid #54849a;border-radius:10px;padding:12px 16px;box-shadow:var(--shadow);z-index:10;max-width:330px}.hidden{display:none!important}.overlay{position:fixed;inset:0;background:#050b12d9;display:grid;place-items:center;padding:16px;z-index:20}.modal{max-width:560px;width:100%;background:#152434;border:1px solid #456078;border-radius:16px;padding:22px;box-shadow:0 25px 80px #0009}.modal h2{margin:0 0 7px}.modal p{color:#b5c4d2}.modal-actions{display:flex;justify-content:space-between;gap:8px;margin-top:18px}.tutorial-step{font-size:11px;color:var(--gold);letter-spacing:.12em;text-transform:uppercase}.footer{color:#6f8498;text-align:center;font-size:10px;padding:18px 0 5px}.empty{padding:20px;text-align:center;color:var(--muted)}.pill{display:inline-block;border:1px solid var(--line);border-radius:20px;padding:4px 8px;font-size:10px;color:var(--muted)}.progress{height:5px;background:#293b4d;border-radius:9px;margin:9px 0}.progress i{display:block;height:100%;background:var(--gold);border-radius:9px}
+@media(max-width:1000px){.metrics{grid-template-columns:repeat(3,1fr)}.layout{grid-template-columns:180px minmax(0,1fr)}.province-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:700px){.app{padding:10px}.top{align-items:flex-start}.top-actions{flex-wrap:wrap;justify-content:flex-end}.brand h1{font-size:14px}.metrics{grid-template-columns:repeat(2,1fr);gap:7px}.metric{padding:10px}.metric strong{font-size:18px}.layout{display:block}.sidebar{position:static;margin-bottom:10px;overflow:auto}.nav{display:flex;min-width:max-content}.nav button{padding:9px 11px}.side-note{display:none}.grid2{grid-template-columns:1fr}.province-grid{grid-template-columns:repeat(3,1fr)}.view-head{align-items:center}.view-head h2{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+ <div class="brand"><div class="flag"></div><div><h1>RECONSTRUCCIÓN NACIONAL</h1><small>SIMULADOR DE GESTIÓN · ARGENTINA</small></div></div>
+ <div class="top-actions"><span class="date" id="date">Año 1 · Trimestre 1</span><button class="btn" id="helpBtn">? Ayuda</button><button class="btn" id="saveBtn">Guardar</button><button class="btn warn" id="resetBtn">Nueva partida</button></div>
+</header>
+<section class="metrics" id="metrics"></section>
+<div class="layout">
+ <aside class="sidebar panel">
+  <nav class="nav" id="nav">
+   <button class="active" data-view="overview">▦ Resumen nacional</button>
+   <button data-view="provinces">⌖ Provincias</button>
+   <button data-view="economy">◈ Economía</button>
+   <button data-view="industry">⚙ Industria</button>
+   <button data-view="infrastructure">⌁ Infraestructura</button>
+   <button data-view="society">♙ Sociedad</button>
+   <button data-view="government">▤ Gobierno</button>
+   <button data-view="chronicle">◷ Historial</button>
+  </nav>
+  <div class="side-note">PARTIDA LOCAL<br>Los avances se guardan en este navegador. No se envían datos a ningún servidor.</div>
+ </aside>
+ <main class="main">
+  <section class="view active" id="view-overview">
+   <div class="view-head"><div><h2>Centro de mando</h2><p>Tu objetivo: estabilizar la economía y reconstruir la capacidad productiva del país.</p></div><span class="pill" id="phase">PLANIFICACIÓN</span></div>
+   <div class="grid2">
+    <div>
+     <div class="panel"><h3>Situación nacional</h3><div id="nationalBars"></div></div>
+     <div class="panel"><h3>Agenda de gestión <span class="tag">ACCIONES</span></h3><div class="action-grid">
+      <button class="action" data-action="road"><b>🛣️ Plan vial federal</b><span>Mejora logística y empleo · $ 1.800 M</span></button>
+      <button class="action" data-action="energy"><b>⚡ Ampliar energía</b><span>Reduce cortes y mejora producción · $ 2.200 M</span></button>
+      <button class="action" data-action="school"><b>🎓 Plan educativo</b><span>Mejora educación a largo plazo · $ 1.200 M</span></button>
+      <button class="action" data-action="hospital"><b>🏥 Equipar hospitales</b><span>Mejora salud y bienestar · $ 1.500 M</span></button>
+     </div></div>
+    </div>
+    <div>
+     <div class="panel"><h3>Alertas del gabinete</h3><div id="alerts"></div></div>
+     <div class="panel"><h3>Próximo trimestre</h3><p class="sub">Cada trimestre actualiza la producción, el empleo, los impuestos y los servicios. Las decisiones generan efectos acumulativos.</p><div class="detail-grid"><div class="detail"><small>Ingresos estimados</small><b id="incomeEst">$ 0 M</b></div><div class="detail"><small>Gastos estimados</small><b id="expenseEst">$ 0 M</b></div></div><button class="btn primary" style="width:100%;margin-top:12px" id="nextTurn">Cerrar trimestre →</button><p class="sub" style="margin-bottom:0">Antes de avanzar, revisá el presupuesto. No hay marcha atrás automática.</p></div>
+    </div>
+   </div>
+  </section>
+  <section class="view" id="view-provinces">
+   <div class="view-head"><div><h2>Mapa federal</h2><p>Seleccioná una provincia para consultar su economía, población e infraestructura.</p></div><span class="pill">24 JURISDICCIONES</span></div>
+   <div class="panel"><h3>Provincias y Ciudad Autónoma</h3><div class="province-grid" id="provinceGrid"></div></div>
+   <div class="panel"><h3 id="provinceTitle">Buenos Aires</h3><p class="sub" id="provinceDesc">Ficha provincial</p><div class="detail-grid" id="provinceDetails"></div><h3 style="margin-top:16px">Sectores productivos</h3><div id="provinceSectors"></div><button class="btn primary" id="investProvince" style="margin-top:13px">Impulsar producción provincial · $ 900 M</button></div>
+  </section>
+  <section class="view" id="view-economy">
+   <div class="view-head"><div><h2>Economía nacional</h2><p>El presupuesto conecta recaudación, gasto público, inversión y actividad privada.</p></div></div>
+   <div class="grid2"><div class="panel"><h3>Presupuesto trimestral</h3><div id="budgetRows"></div><div class="statline"><span>Resultado fiscal</span><b id="fiscalResult"></b></div></div><div class="panel"><h3>Herramientas económicas</h3><div class="action-grid">
+    <button class="action" data-action="tax"><b>Revisar impuestos</b><span>Sube recaudación, puede enfriar consumo · $ 0 M</span></button>
+    <button class="action" data-action="credit"><b>Línea de crédito productivo</b><span>Activa inversión privada · $ 1.000 M</span></button>
+    <button class="action" data-action="subsidy"><b>Apoyo a pymes</b><span>Sostiene empleo y actividad · $ 800 M</span></button>
+    <button class="action" data-action="audit"><b>Auditoría de gastos</b><span>Reduce costos administrativos · $ 250 M</span></button>
+   </div></div></div>
+   <div class="panel"><h3>Indicadores de actividad</h3><div id="econBars"></div></div>
+  </section>
+  <section class="view" id="view-industry">
+   <div class="view-head"><div><h2>Producción e industria</h2><p>Las fábricas necesitan insumos, energía, logística y trabajadores. La capacidad ociosa reduce el rendimiento.</p></div></div>
+   <div class="grid2"><div class="panel"><h3>Cadenas productivas</h3><div id="chains"></div></div><div class="panel"><h3>Política industrial</h3><div class="action-grid">
+    <button class="action" data-action="factory"><b>🏭 Construir parque industrial</b><span>+ capacidad fabril · $ 2.600 M</span></button>
+    <button class="action" data-action="research"><b>🔬 Innovación y tecnología</b><span>Mejora productividad futura · $ 1.400 M</span></button>
+    <button class="action" data-action="agri"><b>🌾 Modernizar el agro</b><span>Mejora materias primas · $ 1.100 M</span></button>
+    <button class="action" data-action="trade"><b>🚢 Facilitar exportaciones</b><span>Mejora ventas externas · $ 700 M</span></button>
+   </div></div></div>
+   <div class="panel"><h3>Capacidad sectorial</h3><div id="industryBars"></div></div>
+  </section>
+  <section class="view" id="view-infrastructure">
+   <div class="view-head"><div><h2>Infraestructura y servicios</h2><p>Las obras compiten por fondos. La infraestructura insuficiente encarece la producción.</p></div></div>
+   <div class="grid2"><div class="panel"><h3>Red nacional</h3><div id="infraBars"></div></div><div class="panel"><h3>Obras prioritarias</h3><div class="action-grid">
+    <button class="action" data-action="ports"><b>⚓ Puertos y ferrocarriles</b><span>Conecta producción y mercados · $ 1.700 M</span></button>
+    <button class="action" data-action="water"><b>💧 Agua y saneamiento</b><span>Mejora calidad de vida · $ 1.000 M</span></button>
+    <button class="action" data-action="housing"><b>🏘️ Vivienda y urbanización</b><span>Reduce déficit habitacional · $ 1.300 M</span></button>
+    <button class="action" data-action="maintenance"><b>🧰 Mantenimiento</b><span>Evita deterioro de obras · $ 500 M</span></button>
+   </div></div></div>
+  </section>
+  <section class="view" id="view-society">
+   <div class="view-head"><div><h2>Sociedad y capital humano</h2><p>Empleo, educación y salud afectan productividad, consumo y estabilidad.</p></div></div>
+   <div class="grid2"><div class="panel"><h3>Indicadores sociales</h3><div id="socialBars"></div></div><div class="panel"><h3>Programas sociales</h3><div class="action-grid">
+    <button class="action" data-action="jobs"><b>👷 Programa de empleo</b><span>Reduce desempleo · $ 900 M</span></button>
+    <button class="action" data-action="training"><b>📚 Formación profesional</b><span>Mejora calificación laboral · $ 650 M</span></button>
+    <button class="action" data-action="health"><b>🩺 Atención primaria</b><span>Mejora cobertura sanitaria · $ 700 M</span></button>
+    <button class="action" data-action="food"><b>🥖 Abastecimiento básico</b><span>Alivia presión sobre hogares · $ 750 M</span></button>
+   </div></div></div>
+  </section>
+  <section class="view" id="view-government">
+   <div class="view-head"><div><h2>Gobierno e instituciones</h2><p>La capacidad de gestión y el respaldo social determinan cuánto podés ejecutar.</p></div></div>
+   <div class="grid2"><div class="panel"><h3>Estado nacional</h3><div id="govBars"></div></div><div class="panel"><h3>Decisiones de gobierno</h3><div id="decisions"></div></div></div>
+  </section>
+  <section class="view" id="view-chronicle">
+   <div class="view-head"><div><h2>Crónica de gestión</h2><p>Registro de decisiones, resultados y acontecimientos del país.</p></div><button class="btn" id="exportBtn">Exportar partida</button></div>
+   <div class="panel log" id="history"></div>
+  </section>
+ </main>
+</div>
+<div class="footer">RECONSTRUCCIÓN NACIONAL · PROTOTIPO JUGABLE 0.1 · SIMULACIÓN FICTICIA CON FINES LÚDICOS</div>
+</div>
+<div class="overlay hidden" id="tutorial"><div class="modal"><div class="tutorial-step" id="tStep">TUTORIAL · 1/5</div><h2 id="tTitle">Bienvenido al gobierno</h2><p id="tText"></p><div class="progress"><i id="tProgress" style="width:20%"></i></div><div class="modal-actions"><button class="btn" id="tSkip">Saltar tutorial</button><button class="btn primary" id="tNext">Siguiente →</button></div></div></div>
+<div class="overlay hidden" id="confirm"><div class="modal"><h2>¿Empezar una nueva partida?</h2><p>Se reemplazará el progreso guardado en este navegador. Esta acción no se puede deshacer.</p><div class="modal-actions"><button class="btn" id="cancelReset">Cancelar</button><button class="btn warn" id="confirmReset">Crear nueva partida</button></div></div></div>
+<div class="toast hidden" id="toast" role="status"></div>
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const fmt=n=>"$ "+Math.round(n).toLocaleString("es-AR")+" M";
+const clamp=(n,a=0,b=100)=>Math.max(a,Math.min(b,n));
+const provinces=[
+["Buenos Aires","Pampeana",17500,72,68,63],["CABA","Metropolitana",3100,94,92,86],["Catamarca","NOA",430,48,43,52],["Chaco","NEA",1200,44,47,50],["Chubut","Patagonia",650,58,53,61],["Córdoba","Pampeana",3900,74,69,70],["Corrientes","NEA",1150,50,48,55],["Entre Ríos","Pampeana",1450,59,57,61],["Formosa","NEA",620,39,41,46],["Jujuy","NOA",800,48,49,52],["La Pampa","Pampeana",380,61,57,62],["La Rioja","NOA",390,46,44,50],["Mendoza","Cuyo",2050,67,64,67],["Misiones","NEA",1350,52,54,57],["Neuquén","Patagonia",720,73,65,70],["Río Negro","Patagonia",800,57,55,60],["Salta","NOA",1550,55,53,57],["San Juan","Cuyo",820,58,55,58],["San Luis","Cuyo",560,65,61,65],["Santa Cruz","Patagonia",330,56,51,59],["Santa Fe","Pampeana",3600,76,72,72],["Santiago del Estero","NOA",1050,42,44,48],["Tierra del Fuego","Patagonia",190,69,61,66],["Tucumán","NOA",1750,63,59,61]
+];
+const initial=()=>({
+year:1,quarter:1,money:18500,debt:6200,approval:54,stability:61,employment:58,education:57,health:63,poverty:34,productivity:49,industry:46,agriculture:61,energy:55,roads:48,ports:52,water:65,housing:51,admin:48,taxRate:22,investment:35,trade:42,tech:28,maintenance:40,foodSupply:66,training:34,provinceBoost:{},selectedProvince:0,history:[],tutorialDone:false,turns:0,party:"Coalición Federal",president:"Gobierno Nacional"
+});
+let s=load();
+function load(){try{const raw=localStorage.getItem("rn_save_v1");if(raw){const data=JSON.parse(raw);return Object.assign(initial(),data)}}catch(e){}return initial()}
+function save(){try{localStorage.setItem("rn_save_v1",JSON.stringify(s));toast("Partida guardada en este navegador.")}catch(e){toast("No se pudo guardar: almacenamiento no disponible.")}}
+function log(title,desc){s.history.unshift({date:"Año "+s.year+" · T"+s.quarter,title,desc});s.history=s.history.slice(0,80)}
+function toast(msg){const el=$("toast");el.textContent=msg;el.classList.remove("hidden");clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.add("hidden"),2600)}
+const navBtns=[...document.querySelectorAll("[data-view]")];
+navBtns.forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));
+function showView(v){document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));$("view-"+v).classList.add("active");navBtns.forEach(b=>b.classList.toggle("active",b.dataset.view===v));render()}
+function metric(label,value,note,cls){return '<div class="metric"><label>'+label+'</label><strong class="'+(cls||"")+'">'+value+'</strong><small>'+note+'</small></div>'}
+function bar(label,value,color,desc){return '<div class="statline"><span>'+label+'</span><b>'+Math.round(value)+'/100</b></div><div class="bar '+(color||"")+'"><span style="width:'+clamp(value)+'%"></span></div>'+(desc?'<div class="sub">'+desc+'</div>':"")}
+function render(){
+ $("date").textContent="Año "+s.year+" · Trimestre "+s.quarter;
+ $("metrics").innerHTML=metric("Tesoro disponible",fmt(s.money),"Deuda: "+fmt(s.debt),s.money<2500?"bad":"")+
+ metric("Aprobación",Math.round(s.approval)+"%","Respaldo social",s.approval<35?"bad":"good")+
+ metric("Empleo",Math.round(s.employment)+"%","Población ocupada")+
+ metric("Actividad industrial",Math.round(s.industry)+"%","Capacidad productiva")+
+ metric("Productividad",Math.round(s.productivity)+"%","Eficiencia general")+
+ metric("Estabilidad",Math.round(s.stability)+"%","Gobernabilidad",s.stability<35?"bad":"");
+ $("nationalBars").innerHTML=bar("Actividad económica",s.productivity,"blue","La productividad mejora con infraestructura, tecnología y formación.")+bar("Capacidad industrial",s.industry,"","La industria requiere energía, logística y materias primas.")+bar("Bienestar social",100-s.poverty,"gold","El indicador combina empleo, salud, educación y abastecimiento.")+bar("Capacidad estatal",s.admin,"blue","Una administración eficiente ejecuta más con los mismos recursos.");
+ $("alerts").innerHTML=alerts();
+ const inc=income(),exp=expense();$("incomeEst").textContent=fmt(inc);$("expenseEst").textContent=fmt(exp);
+ $("phase").textContent=s.stability<30?"CRISIS INSTITUCIONAL":s.money<1000?"CAJA CRÍTICA":"PLANIFICACIÓN";
+ $("budgetRows").innerHTML=[["Recaudación tributaria",inc],["Servicios y salarios",4300],["Infraestructura y mantenimiento",1900],["Salud y educación",2100],["Programas sociales",1300],["Intereses de deuda",s.debt*.025]].map(x=>'<div class="statline"><span>'+x[0]+'</span><b>'+fmt(x[1])+'</b></div>').join("");
+ $("fiscalResult").textContent=(inc-exp>=0?"+":"")+fmt(inc-exp);$("fiscalResult").className=inc-exp>=0?"good":"bad";
+ $("econBars").innerHTML=bar("Consumo interno",clamp(s.employment*.72+(100-s.poverty)*.28),"blue")+bar("Inversión privada",s.investment,"gold")+bar("Comercio exterior",s.trade,"blue")+bar("Presión fiscal",s.taxRate*2.5,"gold");
+ $("chains").innerHTML=chain("Agro y alimentos",s.agriculture,s.energy,s.roads,"materias primas → procesamiento → alimentos")+chain("Industria manufacturera",s.industry,s.energy,s.ports,"insumos → fábrica → bienes terminados")+chain("Construcción",s.roads,s.industry,s.employment,"materiales → obras → empleo");
+ $("industryBars").innerHTML=bar("Agroindustria",s.agriculture)+bar("Manufactura",s.industry)+bar("Tecnología",s.tech)+bar("Disponibilidad energética",s.energy);
+ $("infraBars").innerHTML=bar("Rutas nacionales",s.roads)+bar("Puertos y ferrocarriles",s.ports)+bar("Agua y saneamiento",s.water)+bar("Vivienda y urbanización",s.housing);
+ $("socialBars").innerHTML=bar("Educación",s.education)+bar("Salud",s.health)+bar("Empleo",s.employment)+bar("Abastecimiento",s.foodSupply)+bar("Pobreza (menor es mejor)",100-s.poverty,"gold");
+ $("govBars").innerHTML=bar("Eficiencia administrativa",s.admin)+bar("Estabilidad política",s.stability)+bar("Aprobación pública",s.approval)+bar("Inversión pública",s.investment);
+ $("decisions").innerHTML='<div class="decision"><h4>Acuerdo federal de inversión</h4><p>Negociá con las provincias para coordinar obras y compartir costos.</p><button class="btn" data-action="federal">Firmar acuerdo · $ 600 M</button></div><div class="decision"><h4>Reforma de gestión pública</h4><p>Capacitación y digitalización para mejorar la ejecución estatal.</p><button class="btn" data-action="reform">Iniciar reforma · $ 850 M</button></div><div class="decision"><h4>Consejo económico y social</h4><p>Convocá a sectores productivos y sociales para buscar consensos.</p><button class="btn" data-action="council">Convocar consejo · $ 300 M</button></div>';
+ renderProvinces();renderHistory();
+}
+function chain(name,a,b,c,desc){const eff=Math.round((a+b+c)/3);return '<div style="padding:10px 0;border-bottom:1px solid #293b4e"><div class="statline"><b>'+name+'</b><span class="'+(eff<40?"bad":"good")+'">'+eff+'% de eficiencia</span></div><div class="bar"><span style="width:'+eff+'%"></span></div><div class="sub">'+desc+'</div></div>'}
+function income(){return 4700+(s.employment-50)*28+s.industry*13+s.agriculture*10+s.trade*9+(s.taxRate-22)*95}
+function expense(){return 9600+s.debt*.025}
+function alerts(){let a=[];if(s.money<3000)a.push(["⚠️","Liquidez limitada","La caja disponible es baja. Priorizá inversiones con retorno o revisá gastos."]);if(s.energy<45)a.push(["⚡","Restricción energética","La industria pierde capacidad por falta de energía."]);if(s.roads<40)a.push(["🛣️","Cuello de botella logístico","El transporte encarece los insumos y demora las entregas."]);if(s.approval<40)a.push(["📣","Presión social","El respaldo público está cayendo. Revisá empleo y servicios."]);if(s.poverty>40)a.push(["🏘️","Pobreza elevada","El consumo interno y la estabilidad pueden deteriorarse."]);if(!a.length)a.push(["✓","Sin alertas críticas","La gestión mantiene indicadores dentro de niveles controlables."]);return a.map(x=>'<div class="event"><div class="event-icon">'+x[0]+'</div><div><strong>'+x[1]+'</strong><p>'+x[2]+'</p></div></div>').join("")}
+function renderProvinces(){
+ $("provinceGrid").innerHTML=provinces.map((p,i)=>'<button class="province '+(s.selectedProvince===i?"selected":"")+'" data-province="'+i+'"><b><i class="dot"></i>'+p[0]+'</b><small>'+p[1]+'</small></button>').join("");
+ const p=provinces[s.selectedProvince],boost=s.provinceBoost[s.selectedProvince]||0;
+ $("provinceTitle").textContent=p[0];$("provinceDesc").textContent="Región "+p[1]+" · Población simulada: "+p[2].toLocaleString("es-AR")+" mil habitantes";
+ $("provinceDetails").innerHTML=[["Actividad económica",clamp(p[3]+boost)+"%"],["Empleo",clamp(p[4]+boost/2)+"%"],["Infraestructura",clamp(p[5]+boost/2)+"%"],["Inversión acumulada",fmt(boost*18)]].map(x=>'<div class="detail"><small>'+x[0]+'</small><b>'+x[1]+'</b></div>').join("");
+ $("provinceSectors").innerHTML=bar("Producción primaria",p[3]+boost)+bar("Industria y servicios",p[4]+boost/2)+bar("Conectividad",p[5]+boost/2);
+}
+function renderHistory(){$("history").innerHTML=s.history.length?s.history.map(x=>'<div class="log-item"><b>'+x.title+'</b><small>'+x.date+'</small>'+x.desc+'</div>').join(""):'<div class="empty">Todavía no hay movimientos. Tus decisiones aparecerán acá.</div>'}
+$("provinceGrid").addEventListener("click",e=>{const b=e.target.closest("[data-province]");if(!b)return;s.selectedProvince=Number(b.dataset.province);renderProvinces()});
+$("investProvince").addEventListener("click",()=>{if(spend(900,"Inversión provincial")){s.provinceBoost[s.selectedProvince]=(s.provinceBoost[s.selectedProvince]||0)+5;s.employment=clamp(s.employment+1);s.approval=clamp(s.approval+1);log("Inversión provincial",provinces[s.selectedProvince][0]+" recibe un programa productivo.");render();toast("Inversión asignada.")}});
+function spend(cost,label){if(s.money<cost){toast("Fondos insuficientes. Necesitás "+fmt(cost)+".");return false}s.money-=cost;return true}
+const actions={
+road:[1800,"Plan vial federal",()=>{s.roads=clamp(s.roads+9);s.employment=clamp(s.employment+2);s.productivity=clamp(s.productivity+2)},"Se iniciaron obras viales. La logística y el empleo mejoran."],
+energy:[2200,"Ampliación energética",()=>{s.energy=clamp(s.energy+11);s.industry=clamp(s.industry+3)},"Aumentó la capacidad energética disponible para hogares e industrias."],
+school:[1200,"Plan educativo",()=>{s.education=clamp(s.education+7);s.tech=clamp(s.tech+2)},"Se amplió la inversión educativa. El efecto productivo será gradual."],
+hospital:[1500,"Equipamiento sanitario",()=>{s.health=clamp(s.health+8);s.approval=clamp(s.approval+2)},"Hospitales y centros de salud recibieron equipamiento."],
+tax:[0,"Revisión tributaria",()=>{s.taxRate=clamp(s.taxRate+2,10,35);s.approval=clamp(s.approval-2);s.investment=clamp(s.investment-1)},"Se ajustó la presión tributaria. La recaudación sube, pero puede moderar la inversión."],
+credit:[1000,"Crédito productivo",()=>{s.investment=clamp(s.investment+9);s.industry=clamp(s.industry+2)},"Se abrió una línea de crédito para ampliar la inversión privada."],
+subsidy:[800,"Apoyo a pymes",()=>{s.employment=clamp(s.employment+3);s.industry=clamp(s.industry+2);s.approval=clamp(s.approval+1)},"Las pequeñas empresas reciben apoyo para sostener actividad y empleo."],
+audit:[250,"Auditoría de gastos",()=>{s.admin=clamp(s.admin+7);s.approval=clamp(s.approval+1)},"La auditoría detectó oportunidades para mejorar la eficiencia administrativa."],
+factory:[2600,"Parque industrial",()=>{s.industry=clamp(s.industry+10);s.employment=clamp(s.employment+2);s.investment=clamp(s.investment+3)},"Se amplió la capacidad de producción manufacturera."],
+research:[1400,"Innovación tecnológica",()=>{s.tech=clamp(s.tech+9);s.productivity=clamp(s.productivity+3)},"Se financiaron proyectos de investigación y transferencia tecnológica."],
+agri:[1100,"Modernización agropecuaria",()=>{s.agriculture=clamp(s.agriculture+9);s.foodSupply=clamp(s.foodSupply+3)},"El sector agropecuario incorpora tecnología y mejora rendimientos."],
+trade:[700,"Facilitación exportadora",()=>{s.trade=clamp(s.trade+10);s.investment=clamp(s.investment+2)},"Se simplificaron trámites y mejoró la capacidad exportadora."],
+ports:[1700,"Puertos y ferrocarriles",()=>{s.ports=clamp(s.ports+10);s.roads=clamp(s.roads+2);s.productivity=clamp(s.productivity+2)},"Se ampliaron nodos logísticos para conectar producción y mercados."],
+water:[1000,"Agua y saneamiento",()=>{s.water=clamp(s.water+9);s.health=clamp(s.health+2)},"Se iniciaron obras de agua y saneamiento."],
+housing:[1300,"Vivienda y urbanización",()=>{s.housing=clamp(s.housing+8);s.approval=clamp(s.approval+2);s.employment=clamp(s.employment+1)},"Se puso en marcha un programa de vivienda e infraestructura urbana."],
+maintenance:[500,"Mantenimiento de infraestructura",()=>{s.maintenance=clamp(s.maintenance+9);s.roads=clamp(s.roads+2);s.water=clamp(s.water+1)},"Se reforzó el mantenimiento preventivo de infraestructura."],
+jobs:[900,"Programa de empleo",()=>{s.employment=clamp(s.employment+5);s.poverty=clamp(s.poverty-2);s.approval=clamp(s.approval+2)},"El programa de empleo incorporó trabajadores a proyectos productivos."],
+training:[650,"Formación profesional",()=>{s.training=clamp(s.training+10);s.education=clamp(s.education+2)},"Se abrieron cursos de formación vinculados a sectores productivos."],
+health:[700,"Atención primaria",()=>{s.health=clamp(s.health+5);s.poverty=clamp(s.poverty-1)},"Se fortaleció la red de atención primaria."],
+food:[750,"Abastecimiento básico",()=>{s.foodSupply=clamp(s.foodSupply+9);s.poverty=clamp(s.poverty-2);s.approval=clamp(s.approval+1)},"Se reforzó la distribución y disponibilidad de alimentos."],
+federal:[600,"Acuerdo federal",()=>{s.admin=clamp(s.admin+4);s.roads=clamp(s.roads+2);s.stability=clamp(s.stability+3)},"Las jurisdicciones acordaron coordinar inversiones y compartir información."],
+reform:[850,"Reforma administrativa",()=>{s.admin=clamp(s.admin+9);s.investment=clamp(s.investment+2)},"Comenzó una reforma de procesos y capacidades del Estado."],
+council:[300,"Consejo económico y social",()=>{s.stability=clamp(s.stability+5);s.approval=clamp(s.approval+2)},"Se abrió una mesa de diálogo entre sectores productivos y sociales."]
+};
+document.addEventListener("click",e=>{const b=e.target.closest("[data-action]");if(!b)return;const a=actions[b.dataset.action];if(!a)return;if(!spend(a[0],a[1]))return;a[2]();log(a[1],a[3]);render();toast(a[1]+": decisión ejecutada.")});
+function nextTurn(){
+ const inc=income(),exp=expense(),net=inc-exp;
+ s.money+=net;
+ if(s.money<0){s.debt+=Math.abs(s.money)*.55;s.money=0;s.stability=clamp(s.stability-5);s.approval=clamp(s.approval-4);log("Tensión fiscal","El déficit obligó a financiar gastos con nueva deuda.");}
+ else if(net>0){s.debt=Math.max(0,s.debt-net*.12);s.stability=clamp(s.stability+1)}
+ const bottleneck=(Math.min(s.energy,s.roads,s.agriculture)-45)*.035;
+ s.industry=clamp(s.industry+bottleneck+(s.tech>40?.5:0));
+ s.productivity=clamp(s.productivity+(s.roads+s.energy+s.education-150)*.012);
+ s.employment=clamp(s.employment+(s.industry+s.agriculture-110)*.025+(s.roads>60?.3:0));
+ s.poverty=clamp(s.poverty-(s.employment-50)*.035-(s.foodSupply-50)*.018);
+ s.approval=clamp(s.approval+(s.employment-55)*.035+(s.health-60)*.018-(s.poverty-30)*.045-(net<0?1:0));
+ s.stability=clamp(s.stability+(s.approval-50)*.025+(s.admin-50)*.015-(s.debt>10000?1:0));
+ s.investment=clamp(s.investment+(s.stability-50)*.025+(s.trade-50)*.02);
+ s.foodSupply=clamp(s.foodSupply+(s.agriculture-55)*.025);
+ s.turns++;s.quarter++;if(s.quarter>4){s.quarter=1;s.year++}
+ let event="La economía cerró el trimestre con un resultado fiscal de "+(net>=0?"superávit":"déficit")+" de "+fmt(Math.abs(net))+".";
+ if(s.energy<40){s.industry=clamp(s.industry-2);event+=" La escasez energética limitó la actividad industrial."}
+ if(s.approval<30){s.stability=clamp(s.stability-3);event+=" La baja aprobación aumentó la tensión política."}
+ log("Cierre del trimestre",event);render();saveSilent();toast("Trimestre cerrado. Resultado fiscal: "+(net>=0?"+":"-")+fmt(Math.abs(net))+".");
+}
+function saveSilent(){try{localStorage.setItem("rn_save_v1",JSON.stringify(s))}catch(e){}}
+$("nextTurn").addEventListener("click",()=>{if(confirm("¿Cerrar el trimestre? Se actualizarán economía, empleo, deuda y estabilidad."))nextTurn()});
+$("saveBtn").addEventListener("click",save);
+$("resetBtn").addEventListener("click",()=>$("confirm").classList.remove("hidden"));
+$("cancelReset").addEventListener("click",()=>$("confirm").classList.add("hidden"));
+$("confirmReset").addEventListener("click",()=>{s=initial();log("Inicio de gestión","Se conformó un nuevo gobierno nacional.");saveSilent();$("confirm").classList.add("hidden");render();toast("Nueva partida creada.")});
+$("exportBtn").addEventListener("click",()=>{const blob=new Blob([JSON.stringify(s,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="reconstruccion-nacional-partida.json";a.click();URL.revokeObjectURL(url);toast("Partida exportada.")});
+const tutorial=[
+["Bienvenido al gobierno","Tu tarea es reconstruir la economía nacional. No existe una única estrategia correcta: cada inversión consume fondos y produce efectos distintos."],
+["Leé los indicadores","La barra superior muestra tesoro, aprobación, empleo, industria, productividad y estabilidad. Las alertas te avisan qué problema puede empeorar."],
+["Conocé el territorio","En Provincias podés seleccionar las 24 jurisdicciones. Cada una tiene actividad, empleo e infraestructura propios."],
+["Invertí con criterio","Las obras y programas cuestan dinero. La industria necesita energía, rutas, materias primas y trabajadores: si una cadena falla, cae la producción."],
+["Cerrá el trimestre","Al avanzar el tiempo se actualizan ingresos, gastos, deuda y sociedad. Revisá el presupuesto antes de confirmar. ¡Tu gestión comienza ahora!"]
+];let ti=0;
+function showTutorial(){ti=0;updateTutorial();$("tutorial").classList.remove("hidden")}
+function updateTutorial(){$("tStep").textContent="TUTORIAL · "+(ti+1)+"/"+tutorial.length;$("tTitle").textContent=tutorial[ti][0];$("tText").textContent=tutorial[ti][1];$("tProgress").style.width=((ti+1)/tutorial.length*100)+"%";$("tNext").textContent=ti===tutorial.length-1?"Comenzar →":"Siguiente →"}
+function finishTutorial(){s.tutorialDone=true;saveSilent();$("tutorial").classList.add("hidden")}
+$("tNext").addEventListener("click",()=>{if(ti<tutorial.length-1){ti++;updateTutorial()}else finishTutorial()});
+$("tSkip").addEventListener("click",finishTutorial);
+$("helpBtn").addEventListener("click",showTutorial);
+if(!s.history.length)log("Inicio de gestión","Asumiste la conducción nacional. Consultá el tutorial y revisá las cuentas antes de invertir.");
+render();if(!s.tutorialDone)showTutorial();
+})();
+</script>
+</body></html>
