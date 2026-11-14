@@ -13,6 +13,39 @@
 @media(max-width:700px){.city-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}.detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.detail{padding:10px;background:#1b2c3c;border-radius:8px}.detail small{color:var(--muted);display:block;font-size:10px}.detail b{font-size:15px}.table{width:100%;border-collapse:collapse;font-size:12px}.table th,.table td{text-align:left;padding:10px 7px;border-bottom:1px solid #293b4e}.table th{color:var(--muted);font-weight:600;font-size:10px;text-transform:uppercase}.table tr:last-child td{border-bottom:0}.tag{font-size:10px;padding:3px 7px;border-radius:20px;background:#243b4e;color:#b9d2e7}.good{color:var(--green)}.bad{color:var(--red)}.gold{color:var(--gold)}.muted{color:var(--muted)}.decision{border:1px solid #665538;background:#2b2a25;padding:13px;border-radius:10px;margin-bottom:10px}.decision h4{margin:0 0 5px}.decision p{margin:0 0 10px;color:#c0b9a8;font-size:12px}.decision button{margin:3px}.log{max-height:330px;overflow:auto}.log-item{padding:8px 0;border-bottom:1px solid #263849;font-size:12px}.log-item small{color:var(--muted);display:block}.toast{position:fixed;bottom:18px;right:18px;background:#20394a;border:1px solid #54849a;border-radius:10px;padding:12px 16px;box-shadow:var(--shadow);z-index:10;max-width:330px}.hidden{display:none!important}.overlay{position:fixed;inset:0;background:#050b12d9;display:grid;place-items:center;padding:16px;z-index:20}.modal{max-width:560px;width:100%;background:#152434;border:1px solid #456078;border-radius:16px;padding:22px;box-shadow:0 25px 80px #0009}.modal h2{margin:0 0 7px}.modal p{color:#b5c4d2}.modal-actions{display:flex;justify-content:space-between;gap:8px;margin-top:18px}.tutorial-step{font-size:11px;color:var(--gold);letter-spacing:.12em;text-transform:uppercase}.footer{color:#6f8498;text-align:center;font-size:10px;padding:18px 0 5px}.empty{padding:20px;text-align:center;color:var(--muted)}.pill{display:inline-block;border:1px solid var(--line);border-radius:20px;padding:4px 8px;font-size:10px;color:var(--muted)}.progress{height:5px;background:#293b4d;border-radius:9px;margin:9px 0}.progress i{display:block;height:100%;background:var(--gold);border-radius:9px}
 @media(max-width:1000px){.metrics{grid-template-columns:repeat(3,1fr)}.layout{grid-template-columns:180px minmax(0,1fr)}.province-grid{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:700px){.app{padding:10px}.top{align-items:flex-start}.top-actions{flex-wrap:wrap;justify-content:flex-end}.brand h1{font-size:14px}.metrics{grid-template-columns:repeat(2,1fr);gap:7px}.metric{padding:10px}.metric strong{font-size:18px}.layout{display:block}.sidebar{position:static;margin-bottom:10px;overflow:auto}.nav{display:flex;min-width:max-content}.nav button{padding:9px 11px}.side-note{display:none}.grid2{grid-template-columns:1fr}.province-grid{grid-template-columns:repeat(3,1fr)}.view-head{align-items:center}.view-head h2{font-size:18px}}
+
+/* Pulido 0.2: jerarquía visual, microinteracciones y pantallas financieras */
+:root{--panel3:#203247;--cyan:#79c8d2;--purple:#a99be8}
+html{scroll-behavior:smooth}body{background:radial-gradient(ellipse at 15% -10%,#29465d 0,#0b121b 48%),#0b121b}
+.metric,.panel,.section-card{backdrop-filter:blur(8px)}
+.metric{position:relative;overflow:hidden;transition:border-color .18s,transform .18s}
+.metric:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,var(--green),transparent);opacity:.55}
+.metric:hover{transform:translateY(-2px);border-color:#54718a}
+.panel{transition:border-color .18s}.panel:hover{border-color:#3b536b}
+.nav button{display:flex;align-items:center;gap:9px;transition:background .16s,color .16s,padding .16s}
+.nav button.active{padding-left:15px}
+.btn,.action,.province,.city-card{transition:transform .16s,border-color .16s,background .16s,box-shadow .16s}
+.action{min-height:74px;position:relative;overflow:hidden}
+.action:after{content:"";position:absolute;inset:auto 0 0;height:2px;background:linear-gradient(90deg,var(--cyan),transparent);opacity:0;transition:opacity .16s}
+.action:hover:after{opacity:1}
+.section-kicker{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--cyan);font-weight:750}
+.finance-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.finance-option{border:1px solid var(--line);background:linear-gradient(145deg,#203348,#172535);border-radius:11px;padding:13px;display:flex;flex-direction:column;gap:8px}
+.finance-option h4{margin:0;font-size:13px}.finance-option p{margin:0;color:var(--muted);font-size:11px;min-height:48px}
+.finance-option .btn{margin-top:auto}
+.loan-row{padding:12px 0;border-bottom:1px solid var(--line)}
+.loan-row:last-child{border:0}
+.loan-head{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.loan-head b{font-size:12px}.loan-meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}
+.loan-meta span{font-size:10px;color:var(--muted);background:#203247;padding:4px 7px;border-radius:20px}
+.objective{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.objective:last-child{border-bottom:0}.objective b{font-size:12px}.objective small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+.objective-reward{font-size:10px;color:var(--gold);white-space:nowrap}
+.risk-note{border:1px solid #725a38;background:#302b21;color:#e6c88f;border-radius:9px;padding:10px;font-size:11px}
+.finance-total{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:12px}
+.finance-total strong{font-variant-numeric:tabular-nums}
+@media(max-width:900px){.finance-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.finance-grid{grid-template-columns:1fr}.objective{grid-template-columns:1fr}.objective-reward{white-space:normal}}
 </style>
 </head>
 <body>
@@ -28,6 +61,7 @@
    <button class="active" data-view="overview">▦ Resumen nacional</button>
    <button data-view="provinces">⌖ Provincias</button>
    <button data-view="economy">◈ Economía</button>
+   <button data-view="finance">🏦 Finanzas y crédito</button>
    <button data-view="industry">⚙ Industria</button>
    <button data-view="infrastructure">⌁ Infraestructura</button>
    <button data-view="society">♙ Sociedad</button>
@@ -51,6 +85,7 @@
     </div>
     <div>
      <div class="panel"><h3>Alertas del gabinete</h3><div id="alerts"></div></div>
+     <div class="panel"><h3>Objetivos de gestión</h3><p class="sub">Mandatos temporales: cumplilos para obtener fondos y respaldo político.</p><div id="objectives"></div></div>
      <div class="panel"><h3>Próximo trimestre</h3><p class="sub">Cada trimestre actualiza la producción, el empleo, los impuestos y los servicios. Las decisiones generan efectos acumulativos.</p><div class="detail-grid"><div class="detail"><small>Ingresos estimados</small><b id="incomeEst">$ 0 M</b></div><div class="detail"><small>Gastos estimados</small><b id="expenseEst">$ 0 M</b></div></div><button class="btn primary" style="width:100%;margin-top:12px" id="nextTurn">Cerrar trimestre →</button><p class="sub" style="margin-bottom:0">Antes de avanzar, revisá el presupuesto. No hay marcha atrás automática.</p></div>
     </div>
    </div>
@@ -70,6 +105,24 @@
     <button class="action" data-action="audit"><b>Auditoría de gastos</b><span>Reduce costos administrativos · $ 250 M</span></button>
    </div></div></div>
    <div class="panel"><h3>Indicadores de actividad</h3><div id="econBars"></div></div>
+  </section>
+
+  <section class="view" id="view-finance">
+   <div class="view-head"><div><h2>Finanzas y crédito público</h2><p>Conseguí liquidez, negociá condiciones y administrá el costo de la deuda.</p></div><span class="pill" id="creditRating">RIESGO SOBERANO · —</span></div>
+   <div class="grid2">
+    <div class="panel"><div class="section-kicker">Posición financiera</div><h3 style="margin-top:5px">Balance del Tesoro</h3><div id="financeSummary"></div></div>
+    <div class="panel"><div class="section-kicker">Riesgo y sostenibilidad</div><h3 style="margin-top:5px">Perfil de deuda</h3><div id="debtBars"></div><div class="risk-note" id="debtWarning" style="margin-top:12px"></div></div>
+   </div>
+   <div class="panel"><div class="section-kicker">Mercado de capitales</div><h3 style="margin-top:5px">Fuentes de financiación</h3><p class="sub">Cada crédito aumenta la caja hoy, pero compromete ingresos futuros. Las condiciones dependen de la estabilidad y la capacidad estatal.</p><div class="finance-grid">
+    <article class="finance-option"><div class="tag">ACUERDO INTERNACIONAL</div><h4>Programa de estabilización (FMI)</h4><p>Desembolso grande y rápido. Exige metas fiscales, revisiones periódicas y un costo político considerable.</p><div class="sub">Desembolso: $ 6.000 M · Plazo: 8 trimestres</div><button class="btn primary" data-finance="imf">Solicitar acuerdo</button></article>
+    <article class="finance-option"><div class="tag">BANCO DE DESARROLLO</div><h4>Crédito para infraestructura</h4><p>Financiación más barata y larga, destinada a obras y productividad. Requiere capacidad administrativa.</p><div class="sub">Desembolso: $ 4.000 M · Plazo: 12 trimestres</div><button class="btn primary" data-finance="development">Solicitar crédito</button></article>
+    <article class="finance-option"><div class="tag">MERCADO LOCAL</div><h4>Emitir bonos soberanos</h4><p>Obtené fondos de inversores nacionales. La tasa empeora si la confianza y la estabilidad son bajas.</p><div class="sub">Desembolso: $ 2.500 M · Plazo: 6 trimestres</div><button class="btn primary" data-finance="bonds">Emitir bonos</button></article>
+   </div></div>
+   <div class="grid2">
+    <div class="panel"><h3>Compromisos vigentes</h3><div id="loanList"></div></div>
+    <div class="panel"><h3>Opciones de gestión de deuda</h3><div id="debtActions"></div></div>
+   </div>
+   <div class="panel"><h3>Calendario de vencimientos</h3><div id="debtCalendar"></div></div>
   </section>
   <section class="view" id="view-industry">
    <div class="view-head"><div><h2>Producción e industria</h2><p>Las fábricas necesitan insumos, energía, logística y trabajadores. La capacidad ociosa reduce el rendimiento.</p></div></div>
@@ -127,7 +180,7 @@ const cities=[
 ["La Plata","Mar del Plata","Bahía Blanca","Tandil"],["Ciudad Autónoma de Buenos Aires"],["San Fernando del Valle de Catamarca","Belén","Andalgalá"],["Resistencia","Presidencia Roque Sáenz Peña","Villa Ángela"],["Rawson","Comodoro Rivadavia","Trelew","Puerto Madryn"],["Córdoba","Río Cuarto","Villa María","San Francisco"],["Corrientes","Goya","Paso de los Libres"],["Paraná","Concordia","Gualeguaychú"],["Formosa","Clorinda","Pirané"],["San Salvador de Jujuy","Palpalá","Libertador General San Martín"],["Santa Rosa","General Pico","Toay"],["La Rioja","Chilecito","Aimogasta"],["Mendoza","San Rafael","Godoy Cruz","San Martín"],["Posadas","Oberá","Eldorado","Puerto Iguazú"],["Neuquén","Cutral Có","Zapala","San Martín de los Andes"],["Viedma","San Carlos de Bariloche","General Roca","Cipolletti"],["Salta","Tartagal","San Ramón de la Nueva Orán","Cafayate"],["San Juan","Rawson","Caucete"],["San Luis","Villa Mercedes","Merlo"],["Río Gallegos","Caleta Olivia","El Calafate"],["Santa Fe","Rosario","Rafaela","Reconquista"],["Santiago del Estero","La Banda","Termas de Río Hondo"],["Ushuaia","Río Grande","Tolhuin"],["San Miguel de Tucumán","Tafí Viejo","Concepción"]
 ];
 const initial=()=>({
-year:1,quarter:1,money:18500,debt:6200,approval:54,stability:61,employment:58,education:57,health:63,poverty:34,productivity:49,industry:46,agriculture:61,energy:55,roads:48,ports:52,water:65,housing:51,admin:48,taxRate:22,investment:35,trade:42,tech:28,maintenance:40,foodSupply:66,training:34,provinceBoost:{},selectedProvince:0,selectedCity:0,history:[],tutorialDone:false,turns:0,party:"Coalición Federal",president:"Gobierno Nacional"
+year:1,quarter:1,money:18500,debt:6200,loans:[],creditScore:54,objectives:[],approval:54,stability:61,employment:58,education:57,health:63,poverty:34,productivity:49,industry:46,agriculture:61,energy:55,roads:48,ports:52,water:65,housing:51,admin:48,taxRate:22,investment:35,trade:42,tech:28,maintenance:40,foodSupply:66,training:34,provinceBoost:{},selectedProvince:0,selectedCity:0,history:[],tutorialDone:false,turns:0,party:"Coalición Federal",president:"Gobierno Nacional"
 });
 let s=load();
 function load(){try{const raw=localStorage.getItem("rn_save_v1");if(raw){const data=JSON.parse(raw);return Object.assign(initial(),data)}}catch(e){}return initial()}
@@ -164,8 +217,14 @@ function render(){
  renderProvinces();renderHistory();
 }
 function chain(name,a,b,c,desc){const eff=Math.round((a+b+c)/3);return '<div style="padding:10px 0;border-bottom:1px solid #293b4e"><div class="statline"><b>'+name+'</b><span class="'+(eff<40?"bad":"good")+'">'+eff+'% de eficiencia</span></div><div class="bar"><span style="width:'+eff+'%"></span></div><div class="sub">'+desc+'</div></div>'}
-function income(){return 4700+(s.employment-50)*28+s.industry*13+s.agriculture*10+s.trade*9+(s.taxRate-22)*95}
-function expense(){return 9600+s.debt*.025}
+
+function loanBalance(){return (s.loans||[]).reduce((n,l)=>n+l.balance,0)}
+function baseDebt(){return Math.max(0,s.debt-loanBalance())}
+function quarterlyInterest(){return baseDebt()*.02+(s.loans||[]).reduce((n,l)=>n+l.balance*l.rate/4,0)}
+function quarterlyPrincipal(){return (s.loans||[]).reduce((n,l)=>n+Math.min(l.balance,l.principal/l.term),0)}
+function income(){return 7900+(s.employment-50)*28+s.industry*13+s.agriculture*10+s.trade*9+(s.taxRate-22)*95}
+function expense(){return 9600+quarterlyInterest()+quarterlyPrincipal()}
+
 function alerts(){let a=[];if(s.money<3000)a.push(["⚠️","Liquidez limitada","La caja disponible es baja. Priorizá inversiones con retorno o revisá gastos."]);if(s.energy<45)a.push(["⚡","Restricción energética","La industria pierde capacidad por falta de energía."]);if(s.roads<40)a.push(["🛣️","Cuello de botella logístico","El transporte encarece los insumos y demora las entregas."]);if(s.approval<40)a.push(["📣","Presión social","El respaldo público está cayendo. Revisá empleo y servicios."]);if(s.poverty>40)a.push(["🏘️","Pobreza elevada","El consumo interno y la estabilidad pueden deteriorarse."]);if(!a.length)a.push(["✓","Sin alertas críticas","La gestión mantiene indicadores dentro de niveles controlables."]);return a.map(x=>'<div class="event"><div class="event-icon">'+x[0]+'</div><div><strong>'+x[1]+'</strong><p>'+x[2]+'</p></div></div>').join("")}
 function renderProvinces(){
  $("provinceGrid").innerHTML=provinces.map((p,i)=>'<button class="province '+(s.selectedProvince===i?"selected":"")+'" data-province="'+i+'"><b><i class="dot"></i>'+p[0]+'</b><small>'+p[1]+'</small></button>').join("");
@@ -214,7 +273,7 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-action]");
 function nextTurn(){
  const inc=income(),exp=expense(),net=inc-exp;
  s.money+=net;
- if(s.money<0){s.debt+=Math.abs(s.money)*.55;s.money=0;s.stability=clamp(s.stability-5);s.approval=clamp(s.approval-4);log("Tensión fiscal","El déficit obligó a financiar gastos con nueva deuda.");}
+ if(s.money<0){s.debt+=Math.abs(s.money);s.money=0;s.stability=clamp(s.stability-5);s.approval=clamp(s.approval-4);log("Tensión fiscal","El déficit obligó a financiar gastos con nueva deuda.");}
  else if(net>0){s.debt=Math.max(0,s.debt-net*.12);s.stability=clamp(s.stability+1)}
  const bottleneck=(Math.min(s.energy,s.roads,s.agriculture)-45)*.035;
  s.industry=clamp(s.industry+bottleneck+(s.tech>40?.5:0));
@@ -225,7 +284,13 @@ function nextTurn(){
  s.stability=clamp(s.stability+(s.approval-50)*.025+(s.admin-50)*.015-(s.debt>10000?1:0));
  s.investment=clamp(s.investment+(s.stability-50)*.025+(s.trade-50)*.02);
  s.foodSupply=clamp(s.foodSupply+(s.agriculture-55)*.025);
+ 
+ // Amortización de créditos: el interés ya está incluido en el gasto trimestral.
+ (s.loans||[]).forEach(function(l){const principal=Math.min(l.balance,l.principal/l.term);l.balance=Math.max(0,l.balance-principal);l.remaining=Math.max(0,l.remaining-1);s.debt=Math.max(0,s.debt-principal)});
+ s.loans=(s.loans||[]).filter(l=>l.balance>.01);
+ checkObjectives();
  s.turns++;s.quarter++;if(s.quarter>4){s.quarter=1;s.year++}
+
  let event="La economía cerró el trimestre con un resultado fiscal de "+(net>=0?"superávit":"déficit")+" de "+fmt(Math.abs(net))+".";
  if(s.energy<40){s.industry=clamp(s.industry-2);event+=" La escasez energética limitó la actividad industrial."}
  if(s.approval<30){s.stability=clamp(s.stability-3);event+=" La baja aprobación aumentó la tensión política."}
@@ -253,6 +318,81 @@ $("tSkip").addEventListener("click",finishTutorial);
 $("helpBtn").addEventListener("click",showTutorial);
 if(!s.history.length)log("Inicio de gestión","Asumiste la conducción nacional. Consultá el tutorial y revisá las cuentas antes de invertir.");
 render();if(!s.tutorialDone)showTutorial();
+
+/* ===== Sistemas 0.2: financiación, mandatos y decisiones de deuda ===== */
+s.loans = Array.isArray(s.loans) ? s.loans : [];
+s.creditScore = Number.isFinite(s.creditScore) ? s.creditScore : clamp(54+(s.stability-50)*.35);
+s.objectives = Array.isArray(s.objectives) ? s.objectives : [];
+function makeObjectives(){
+ const pool=[
+  {title:"Recuperar la confianza",desc:"Alcanzá 60 puntos de aprobación pública.",stat:"approval",target:60,reward:900},
+  {title:"Reactivar las fábricas",desc:"Llevá la actividad industrial a 55 puntos.",stat:"industry",target:55,reward:1100},
+  {title:"Mejorar el empleo",desc:"Alcanzá 62 puntos de empleo.",stat:"employment",target:62,reward:1000},
+  {title:"Fortalecer la capacidad estatal",desc:"Elevá la eficiencia administrativa a 58.",stat:"admin",target:58,reward:850},
+  {title:"Destrabar la logística",desc:"Llevá las rutas nacionales a 58 puntos.",stat:"roads",target:58,reward:950},
+  {title:"Impulsar las exportaciones",desc:"Alcanzá 55 puntos de comercio exterior.",stat:"trade",target:55,reward:1000}
+ ];
+ const eligible=pool.filter(o=>Number(s[o.stat]||0)<o.target);
+ const chosen=[];
+ while(eligible.length&&chosen.length<2){const i=Math.floor(Math.random()*eligible.length);chosen.push(eligible.splice(i,1)[0])}
+ return chosen.map(o=>Object.assign({},o,{deadline:s.turns+4,done:false}));
+}
+function checkObjectives(){
+ (s.objectives||[]).forEach(function(o){
+  if(o.done)return;
+  if(Number(s[o.stat]||0)>=o.target){o.done=true;s.money+=o.reward;s.approval=clamp(s.approval+1.5);log("Mandato cumplido",o.title+" completado. El Tesoro recibe "+fmt(o.reward)+" y mejora el respaldo público.");}
+  else if(s.turns+1>=o.deadline){o.done=true;o.failed=true;s.approval=clamp(s.approval-1.5);s.creditScore=clamp(s.creditScore-2);log("Mandato incumplido",o.title+" venció sin alcanzar la meta. Se debilitó la confianza.");}
+ });
+ if(!s.objectives.length || s.objectives.every(o=>o.done)){s.objectives=makeObjectives()}
+}
+function financeRender(){
+ $("creditRating").textContent="RIESGO SOBERANO · "+(s.creditScore>=70?"BAJO":s.creditScore>=45?"MODERADO":"ALTO");
+ $("financeSummary").innerHTML='<div class="finance-total"><span>Tesoro disponible</span><strong>'+fmt(s.money)+'</strong></div><div class="finance-total"><span>Deuda total</span><strong>'+fmt(s.debt)+'</strong></div><div class="finance-total"><span>Intereses trimestrales</span><strong>'+fmt(quarterlyInterest())+'</strong></div><div class="finance-total"><span>Capital a amortizar este trimestre</span><strong>'+fmt(quarterlyPrincipal())+'</strong></div><div class="finance-total"><span>Resultado fiscal estimado</span><strong class="'+(income()-expense()>=0?"good":"bad")+'">'+(income()-expense()>=0?"+":"")+fmt(income()-expense())+'</strong></div>';
+ $("debtBars").innerHTML=bar("Confianza de acreedores",s.creditScore,"blue","Mejora con estabilidad, pagos y cumplimiento de metas.")+bar("Estabilidad institucional",s.stability)+bar("Capacidad administrativa",s.admin);
+ $("debtWarning").textContent=s.debt>18000?"Endeudamiento elevado: priorizá refinanciar vencimientos y recuperar el superávit.":s.debt>10000?"Deuda significativa: los intereses empiezan a limitar el presupuesto.":"Deuda manejable: todavía hay margen para financiar proyectos, con prudencia.";
+ $("loanList").innerHTML=s.loans.length?s.loans.map(function(l){return '<div class="loan-row"><div class="loan-head"><b>'+l.name+'</b><span class="tag">'+l.remaining+' trimestres restantes</span></div><div class="bar blue"><span style="width:'+Math.max(0,100*l.balance/l.original)+'%"></span></div><div class="loan-meta"><span>Saldo: '+fmt(l.balance)+'</span><span>Tasa anual: '+(l.rate*100).toFixed(1)+'%</span><span>Capital trimestral: '+fmt(Math.min(l.balance,l.principal/l.term))+'</span></div></div>'}).join(""):'<div class="empty">No hay créditos específicos vigentes. Podés financiar proyectos desde las opciones de arriba.</div>';
+ $("debtActions").innerHTML='<div class="decision"><h4>Reestructurar deuda</h4><p>Negociá una extensión de plazos y una reducción temporal de intereses. El mercado exigirá un costo de confianza.</p><button class="btn" data-finance="restructure" '+(s.debt<8000?'disabled':'')+'>Negociar reestructuración</button></div><div class="decision"><h4>Plan de disciplina fiscal</h4><p>Mejora la confianza de acreedores y reduce gastos futuros, pero puede afectar la aprobación.</p><button class="btn" data-finance="discipline">Aplicar plan fiscal · $ 300 M</button></div>';
+ $("debtCalendar").innerHTML=s.loans.length?'<div class="statline"><span>Próximo cierre</span><b>'+fmt(quarterlyInterest()+quarterlyPrincipal())+'</b></div><p class="sub">Los vencimientos se descuentan automáticamente al cerrar cada trimestre. El interés está contemplado en el presupuesto.</p>':'<div class="empty">Sin vencimientos de créditos específicos.</div>';
+ $("objectives").innerHTML=s.objectives.length?s.objectives.map(function(o){const val=Number(s[o.stat]||0),pct=clamp(val/o.target*100);return '<div class="objective"><div><b>'+o.title+'</b><small>'+o.desc+' · '+Math.max(0,o.deadline-s.turns)+' trimestres</small><div class="bar"><span style="width:'+pct+'%"></span></div></div><div class="objective-reward">'+(o.done?(o.failed?'VENCIDO':'COMPLETADO'):'RECOMPENSA '+fmt(o.reward))+'</div></div>'}).join(""):'<div class="empty">Los primeros mandatos aparecerán al iniciar el próximo trimestre.</div>';
+}
+function takeCredit(kind){
+ let offer=null;
+ if(kind==="imf")offer={name:"Programa de estabilización internacional",principal:6000,rate:.105,term:8,minStability:35,minAdmin:40,scoreCost:5,approvalCost:2};
+ if(kind==="development")offer={name:"Crédito del Banco de Desarrollo",principal:4000,rate:.06,term:12,minStability:40,minAdmin:48,scoreCost:1,approvalCost:0};
+ if(kind==="bonds")offer={name:"Bonos soberanos nacionales",principal:2500,rate:Math.max(.055,.14-(s.creditScore*.0008)),term:6,minStability:25,minAdmin:0,scoreCost:3,approvalCost:0};
+ if(!offer)return;
+ if(s.stability<offer.minStability||s.admin<offer.minAdmin){toast("Solicitud rechazada: faltan condiciones de estabilidad o capacidad estatal.");return}
+ const interest=offer.principal*offer.rate/4;
+ if(s.debt>22000){toast("Los acreedores no ofrecen nuevos fondos con este nivel de deuda.");return}
+ s.money+=offer.principal;s.debt+=offer.principal;
+ s.loans.push({name:offer.name,principal:offer.principal,original:offer.principal,balance:offer.principal,rate:offer.rate,term:offer.term,remaining:offer.term});
+ s.creditScore=clamp(s.creditScore-offer.scoreCost+(s.stability>65?1:0));
+ s.approval=clamp(s.approval-offer.approvalCost);
+ log("Nuevo financiamiento",offer.name+": ingresan "+fmt(offer.principal)+". Tasa anual "+(offer.rate*100).toFixed(1)+"%, plazo "+offer.term+" trimestres. Interés inicial estimado: "+fmt(interest)+".");
+ render();toast("Financiamiento aprobado: "+fmt(offer.principal)+". Revisá los vencimientos.");
+}
+document.addEventListener("click",function(e){
+ const b=e.target.closest("[data-finance]");if(!b)return;
+ const kind=b.dataset.finance;
+ if(kind==="imf"||kind==="development"||kind==="bonds"){takeCredit(kind);return}
+ if(kind==="discipline"){
+  if(!spend(300,"Plan fiscal"))return;
+  s.admin=clamp(s.admin+3);s.creditScore=clamp(s.creditScore+7);s.approval=clamp(s.approval-2);
+  log("Plan de disciplina fiscal","Se mejoró el control presupuestario. Aumentó la confianza financiera, con un costo político moderado.");
+  render();toast("Plan fiscal aplicado.");return;
+ }
+ if(kind==="restructure"){
+  if(s.debt<8000){toast("La deuda todavía no justifica una reestructuración.");return}
+  s.loans.forEach(l=>{l.rate=Math.max(.035,l.rate-.02);l.term+=4;l.remaining+=4});
+  s.creditScore=clamp(s.creditScore-8);s.stability=clamp(s.stability-2);
+  log("Reestructuración de deuda","Se extendieron plazos y redujeron tasas de créditos específicos. La confianza de acreedores cayó temporalmente.");
+  render();toast("Nueva estructura de vencimientos acordada.");
+ }
+});
+const previousRender=render;
+render=function(){previousRender();financeRender()};
+if(!s.objectives.length)s.objectives=makeObjectives();
+
 })();
 </script>
 </body></html>
