@@ -46,6 +46,8 @@ html{scroll-behavior:smooth}body{background:radial-gradient(ellipse at 15% -10%,
 .finance-total strong{font-variant-numeric:tabular-nums}
 @media(max-width:900px){.finance-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:700px){.finance-grid{grid-template-columns:1fr}.objective{grid-template-columns:1fr}.objective-reward{white-space:normal}}
+/* Macroeconomía 0.3 */
+.macro-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.chart-panel{min-width:0}.chart-wrap{width:100%;overflow:hidden}.line-chart{width:100%;height:auto;display:block;min-height:150px}.chart-legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:10px;margin-top:5px}.chart-legend i{display:inline-block;width:15px;height:3px;border-radius:3px;vertical-align:middle;margin-right:4px;background:var(--cyan)}.macro-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.macro-kpi{padding:10px;background:#1b2c3c;border:1px solid var(--line);border-radius:9px;min-width:0}.macro-kpi small{display:block;color:var(--muted);font-size:10px}.macro-kpi b{display:block;font-size:17px;font-variant-numeric:tabular-nums}.macro-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.macro-action{border:1px solid var(--line);background:#1a2b3c;border-radius:9px;padding:11px;text-align:left}.macro-action b{display:block;font-size:12px}.macro-action small{display:block;color:var(--muted);font-size:10px;margin-top:4px}@media(max-width:800px){.macro-grid{grid-template-columns:1fr}.macro-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -105,6 +107,19 @@ html{scroll-behavior:smooth}body{background:radial-gradient(ellipse at 15% -10%,
     <button class="action" data-action="audit"><b>Auditoría de gastos</b><span>Reduce costos administrativos · $ 250 M</span></button>
    </div></div></div>
    <div class="panel"><h3>Indicadores de actividad</h3><div id="econBars"></div></div>
+   <div class="panel"><div class="section-kicker">Tablero macroeconómico</div><h3 style="margin-top:5px">Precios, empleo y mercado cambiario</h3><p class="sub">Los datos se actualizan al cerrar cada trimestre. Las líneas muestran la evolución de tu partida.</p><div class="macro-kpis" id="macroKpis"></div></div>
+   <div class="macro-grid">
+    <div class="panel chart-panel"><h3>Inflación y salarios</h3><div class="chart-wrap" id="chartInflation"></div><div class="chart-legend"><span><i></i> Inflación trimestral</span><span>— Índice salarial</span></div></div>
+    <div class="panel chart-panel"><h3>Mercado cambiario</h3><div class="chart-wrap" id="chartFx"></div><div class="chart-legend"><span><i></i> Dólar oficial</span><span>— Dólar paralelo</span></div></div>
+    <div class="panel chart-panel"><h3>Empleo y formalidad</h3><div class="chart-wrap" id="chartJobs"></div><div class="chart-legend"><span><i></i> Desempleo</span><span>— Empleo formal</span></div></div>
+    <div class="panel chart-panel"><h3>Reservas internacionales</h3><div class="chart-wrap" id="chartReserves"></div><div class="chart-legend"><span><i></i> Reservas (USD M)</span></div></div>
+   </div>
+   <div class="panel"><div class="section-kicker">Instrumentos de política económica</div><h3 style="margin-top:5px">Decisiones macroeconómicas</h3><div class="macro-actions">
+    <button class="macro-action" data-macro="stabilize"><b>🧊 Programa antiinflacionario</b><small>Costo $450 M · reduce inflación gradualmente, con enfriamiento inicial de actividad.</small></button>
+    <button class="macro-action" data-macro="reserves"><b>💱 Acumular reservas</b><small>Costo $700 M · suma reservas y reduce presión cambiaria.</small></button>
+    <button class="macro-action" data-macro="devalue"><b>📉 Corregir tipo de cambio oficial</b><small>Ajusta el dólar oficial, mejora competitividad y puede trasladarse a precios.</small></button>
+    <button class="macro-action" data-macro="formalize"><b>🏭 Incentivar empleo formal</b><small>Costo $500 M · mejora formalidad y reduce desempleo con demora.</small></button>
+   </div><p class="sub" style="margin-bottom:0;margin-top:10px">Las medidas tienen efectos secundarios. No existe una política gratuita ni una solución instantánea.</p></div>
   </section>
 
   <section class="view" id="view-finance">
@@ -196,7 +211,7 @@ function render(){
  $("date").textContent="Año "+s.year+" · Trimestre "+s.quarter;
  $("metrics").innerHTML=metric("Tesoro disponible",fmt(s.money),"Deuda: "+fmt(s.debt),s.money<2500?"bad":"")+
  metric("Aprobación",Math.round(s.approval)+"%","Respaldo social",s.approval<35?"bad":"good")+
- metric("Empleo",Math.round(s.employment)+"%","Población ocupada")+
+ metric("Índice de empleo",Math.round(s.employment)+"%","Actividad laboral agregada")+
  metric("Actividad industrial",Math.round(s.industry)+"%","Capacidad productiva")+
  metric("Productividad",Math.round(s.productivity)+"%","Eficiencia general")+
  metric("Estabilidad",Math.round(s.stability)+"%","Gobernabilidad",s.stability<35?"bad":"");
@@ -204,7 +219,7 @@ function render(){
  $("alerts").innerHTML=alerts();
  const inc=income(),exp=expense();$("incomeEst").textContent=fmt(inc);$("expenseEst").textContent=fmt(exp);
  $("phase").textContent=s.stability<30?"CRISIS INSTITUCIONAL":s.money<1000?"CAJA CRÍTICA":"PLANIFICACIÓN";
- $("budgetRows").innerHTML=[["Recaudación tributaria",inc],["Servicios y salarios",4300],["Infraestructura y mantenimiento",1900],["Salud y educación",2100],["Programas sociales",1300],["Intereses de deuda",s.debt*.025]].map(x=>'<div class="statline"><span>'+x[0]+'</span><b>'+fmt(x[1])+'</b></div>').join("");
+ $("budgetRows").innerHTML=[["Recaudación tributaria",inc],["Servicios y salarios",4300],["Infraestructura y mantenimiento",1900],["Salud y educación",2100],["Programas sociales",1300],["Intereses de deuda",quarterlyInterest()],["Amortización de capital",quarterlyPrincipal()]].map(x=>'<div class="statline"><span>'+x[0]+'</span><b>'+fmt(x[1])+'</b></div>').join("");
  $("fiscalResult").textContent=(inc-exp>=0?"+":"")+fmt(inc-exp);$("fiscalResult").className=inc-exp>=0?"good":"bad";
  const taxButton=document.querySelector('[data-action="tax"]');if(taxButton){taxButton.disabled=s.taxRate>=35;taxButton.querySelector("b").textContent=s.taxRate>=35?"Tope tributario alcanzado":"Revisar impuestos";}
  $("econBars").innerHTML=bar("Consumo interno",clamp(s.employment*.72+(100-s.poverty)*.28),"blue")+bar("Inversión privada",s.investment,"gold")+bar("Comercio exterior",s.trade,"blue")+bar("Presión fiscal",s.taxRate*2.5,"gold");
@@ -284,12 +299,14 @@ function nextTurn(){
  s.stability=clamp(s.stability+(s.approval-50)*.025+(s.admin-50)*.015-(s.debt>10000?1:0));
  s.investment=clamp(s.investment+(s.stability-50)*.025+(s.trade-50)*.02);
  s.foodSupply=clamp(s.foodSupply+(s.agriculture-55)*.025);
+ evolveMacroeconomy(net);
  
  // Amortización de créditos: el interés ya está incluido en el gasto trimestral.
  (s.loans||[]).forEach(function(l){const principal=Math.min(l.balance,l.principal/l.term);l.balance=Math.max(0,l.balance-principal);l.remaining=Math.max(0,l.remaining-1);s.debt=Math.max(0,s.debt-principal)});
  s.loans=(s.loans||[]).filter(l=>l.balance>.01);
  checkObjectives();
  s.turns++;s.quarter++;if(s.quarter>4){s.quarter=1;s.year++}
+ recordMacroHistory();
 
  let event="La economía cerró el trimestre con un resultado fiscal de "+(net>=0?"superávit":"déficit")+" de "+fmt(Math.abs(net))+".";
  if(s.energy<40){s.industry=clamp(s.industry-2);event+=" La escasez energética limitó la actividad industrial."}
@@ -393,6 +410,51 @@ document.addEventListener("click",function(e){
 const previousRender=render;
 render=function(){previousRender();financeRender()};
 if(!s.objectives.length)s.objectives=makeObjectives();
+
+/* ===== Macroeconomía 0.3 ===== */
+function ensureMacroState(){
+ const d={inflation:5.2,officialFx:1000,parallelFx:1250,reserves:18500,priceIndex:100,wageIndex:100,unemployment:8.4,participation:62,formalShare:48};
+ Object.keys(d).forEach(k=>{if(!Number.isFinite(Number(s[k])))s[k]=d[k]});
+ s.macroHistory=Array.isArray(s.macroHistory)?s.macroHistory:[];
+ if(!s.macroHistory.length)s.macroHistory.push(macroSnapshot());
+ s.macroHistory=s.macroHistory.slice(-24);
+}
+function macroSnapshot(){return {label:"A"+s.year+" T"+s.quarter,inflation:s.inflation,officialFx:s.officialFx,parallelFx:s.parallelFx,reserves:s.reserves,priceIndex:s.priceIndex,wageIndex:s.wageIndex,unemployment:s.unemployment,formalShare:s.formalShare,gap:Math.max(0,(s.parallelFx/s.officialFx-1)*100)}}
+function recordMacroHistory(){s.macroHistory.push(macroSnapshot());s.macroHistory=s.macroHistory.slice(-24)}
+function evolveMacroeconomy(fiscalNet){
+ const gap=Math.max(0,(s.parallelFx/s.officialFx-1)*100),fxPressure=clamp((gap-10)*.018,0,1.8),reservePressure=s.reserves<5000?1.25:s.reserves<10000?.65:0,supplyRelief=(s.foodSupply-55)*.018+(s.energy-50)*.012,fiscalPressure=fiscalNet<0?Math.min(1.8,Math.abs(fiscalNet)/4500):Math.min(.55,fiscalNet/9000),stabilization=s.antiInflationTurns>0?1:0;
+ s.inflation=clamp(s.inflation+fxPressure+reservePressure+fiscalPressure-supplyRelief-stabilization,.2,35);if(s.antiInflationTurns>0)s.antiInflationTurns--;
+ const officialCrawl=clamp(s.inflation*.22+(s.trade-50)*.008,.3,3.5),parallelCrawl=clamp(s.inflation*.3+gap*.012+reservePressure*.35+(s.stability<40?.5:0),.2,5.5);
+ s.officialFx=Math.max(1,s.officialFx*(1+officialCrawl/100));s.parallelFx=Math.max(s.officialFx,s.parallelFx*(1+parallelCrawl/100));
+ const tradeFlow=(s.trade-45)*95+(s.agriculture-50)*38-(s.industry<40?250:0),fiscalReserveFlow=fiscalNet>0?Math.min(650,fiscalNet*.08):Math.max(-700,fiscalNet*.1);
+ s.reserves=clamp(s.reserves+tradeFlow+fiscalReserveFlow-(gap>35?220:0),500,60000);
+ s.priceIndex*=1+s.inflation/100;s.wageIndex*=1+Math.max(0,s.inflation*.72+(s.employment-55)*.025)/100;
+ const activity=(s.industry-50)*.035+(s.agriculture-50)*.018+(s.investment-50)*.012;
+ s.unemployment=clamp(s.unemployment-activity+(s.inflation>12?.12:0)+(s.stability<35?.2:0),3,28);
+ s.formalShare=clamp(s.formalShare+(s.admin-50)*.012+(s.investment-50)*.008-(s.unemployment>15?.08:0),25,75);
+}
+function svgLineChart(rows,series,format){
+ const W=520,H=178,L=48,R=12,T=12,B=28,all=rows.flatMap(r=>series.map(q=>Number(r[q.key])||0));let min=Math.min(...all),max=Math.max(...all);if(!Number.isFinite(min)||!Number.isFinite(max)){min=0;max=1}if(max===min){max+=1;min=Math.max(0,min-1)}const pad=(max-min)*.16;min=Math.max(0,min-pad);max+=pad;
+ const x=i=>L+(rows.length<2?0:i*(W-L-R)/(rows.length-1)),y=v=>T+(max-v)*(H-T-B)/(max-min);
+ const grid=[0,1,2,3].map(i=>{const yy=T+i*(H-T-B)/3;return '<line x1="'+L+'" y1="'+yy+'" x2="'+(W-R)+'" y2="'+yy+'" stroke="#2b4053"/><text x="3" y="'+(yy+4)+'" fill="#91a4b8" font-size="10">'+format(max-i*(max-min)/3)+'</text>'}).join("");
+ const paths=series.map((q,si)=>{const d=rows.map((r,i)=>(i?"L":"M")+x(i).toFixed(1)+","+y(Number(r[q.key])||0).toFixed(1)).join(" "),c=si===0?"#79c8d2":"#e6b75c";return '<path d="'+d+'" fill="none" stroke="'+c+'" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>'+rows.map((r,i)=>'<circle cx="'+x(i)+'" cy="'+y(Number(r[q.key])||0)+'" r="2.5" fill="'+c+'"/>').join("")}).join("");
+ const labels=rows.map((r,i)=>i===0||i===rows.length-1||i===Math.floor(rows.length/2)?'<text x="'+x(i)+'" y="'+(H-7)+'" text-anchor="middle" fill="#91a4b8" font-size="9">'+r.label+'</text>':"").join("");
+ return '<svg class="line-chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Gráfico histórico de '+series.map(q=>q.name).join(" y ")+'">'+grid+paths+labels+'</svg>';
+}
+function renderMacro(){
+ if(!$("macroKpis"))return;const gap=Math.max(0,(s.parallelFx/s.officialFx-1)*100);
+ $("macroKpis").innerHTML=[["Inflación trimestral",s.inflation.toFixed(1)+"%"],["Desempleo estimado",s.unemployment.toFixed(1)+"%"],["Brecha cambiaria",gap.toFixed(1)+"%"],["Reservas",fmt(s.reserves)+" USD M"],["Dólar oficial","$"+Math.round(s.officialFx).toLocaleString("es-AR")],["Dólar paralelo","$"+Math.round(s.parallelFx).toLocaleString("es-AR")],["Índice de precios",s.priceIndex.toFixed(1)],["Empleo formal",s.formalShare.toFixed(1)+"%"]].map(x=>'<div class="macro-kpi"><small>'+x[0]+'</small><b>'+x[1]+'</b></div>').join("");
+ const rows=s.macroHistory.slice(-12);$("chartInflation").innerHTML=svgLineChart(rows,[{key:"inflation",name:"Inflación"},{key:"wageIndex",name:"Índice salarial"}],v=>v.toFixed(0));$("chartFx").innerHTML=svgLineChart(rows,[{key:"officialFx",name:"Dólar oficial"},{key:"parallelFx",name:"Dólar paralelo"}],v=>"$"+Math.round(v));$("chartJobs").innerHTML=svgLineChart(rows,[{key:"unemployment",name:"Desempleo"},{key:"formalShare",name:"Empleo formal"}],v=>v.toFixed(0)+"%");$("chartReserves").innerHTML=svgLineChart(rows,[{key:"reserves",name:"Reservas"}],v=>Math.round(v).toLocaleString("es-AR"));
+}
+document.addEventListener("click",function(e){
+ const b=e.target.closest("[data-macro]");if(!b)return;const k=b.dataset.macro;
+ if(k==="stabilize"){if(!spend(450,"Programa antiinflacionario"))return;s.antiInflationTurns=4;s.investment=clamp(s.investment-1.5);s.unemployment=clamp(s.unemployment+.2,3,28);log("Programa antiinflacionario","Se inició un programa de coordinación de precios y disciplina monetaria. La inflación debería moderarse gradualmente, con un costo inicial de actividad.");render();toast("Programa antiinflacionario iniciado.");return}
+ if(k==="reserves"){if(!spend(700,"Acumulación de reservas"))return;s.reserves=clamp(s.reserves+900,500,60000);s.stability=clamp(s.stability+.5);log("Acumulación de reservas","El Tesoro destinó recursos a fortalecer las reservas internacionales y reducir vulnerabilidad cambiaria.");render();toast("Reservas internacionales fortalecidas.");return}
+ if(k==="devalue"){s.officialFx*=1.08;s.trade=clamp(s.trade+2);s.inflation=clamp(s.inflation+.8,.2,35);log("Corrección cambiaria","Se corrigió el tipo de cambio oficial un 8%. Mejora la competitividad exportadora, pero aumenta el riesgo de traslado a precios.");render();toast("Tipo de cambio oficial actualizado.");return}
+ if(k==="formalize"){if(!spend(500,"Incentivo al empleo formal"))return;s.formalShare=clamp(s.formalShare+2,25,75);s.unemployment=clamp(s.unemployment-.4,3,28);s.investment=clamp(s.investment+1);log("Incentivo al empleo formal","Se lanzó un esquema de incentivos a la contratación registrada. Sus efectos productivos se consolidarán gradualmente.");render();toast("Incentivo al empleo formal aprobado.")}
+});
+ensureMacroState();const renderBeforeMacro=render;render=function(){renderBeforeMacro();renderMacro()};
+
 render();
 
 })();
