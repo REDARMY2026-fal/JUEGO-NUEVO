@@ -177,13 +177,13 @@ function balanceOfPayments(fiscalNet=0){
  const exportsGoods=Math.max(250,3600+(state.trade-42)*48+(state.agriculture-50)*34+(state.industry-45)*22+(state.ports-50)*12+privateAgro*.18);
  const importsGoods=Math.max(250,3000+(state.industry-45)*30+(state.employment-50)*17+(state.investment-35)*24+(55-state.energy)*13+privateIndustry*.12);
  const servicesBalance=-320+(state.tech-28)*14-(state.trade-42)*3;
- const primaryIncome=-Math.max(80,90+state.debt*.012+state.privateCompanies.reduce((a,c)=>a+(Number(c.capital)||0),0)*.004);
+ const estimatedForeignDebt=state.debt*.45;const primaryIncome=-Math.max(80,90+estimatedForeignDebt*.012+state.privateCompanies.reduce((a,c)=>a+(Number(c.capital)||0),0)*.004);
  const secondaryIncome=70+Math.max(0,state.formalShare-40)*1.5;
  const currentAccount=exportsGoods-importsGoods+servicesBalance+primaryIncome+secondaryIncome;
  const fdi=Math.max(-180,80+(state.stability-50)*8+(state.investment-35)*15+(state.creditScore-50)*4);
  const gap=Math.max(0,(state.parallelFx/state.officialFx-1)*100);
- const portfolio=Math.max(-650,Math.min(500,(state.fxConfidence-50)*5-(gap-20)*2-Math.max(0,state.inflation-8)*5));
- const externalDebtFlows=-Math.max(0,state.debt)*.006;
+ const fiscalFlow=fiscalNet>0?Math.min(100,fiscalNet*.006):Math.max(-180,fiscalNet*.018);const portfolio=Math.max(-650,Math.min(500,(state.fxConfidence-50)*5-(gap-20)*2-Math.max(0,state.inflation-8)*5+fiscalFlow));
+ const externalDebtFlows=-Math.max(0,estimatedForeignDebt)*.006;
  const tradeCredit=20+(state.trade-45)*1.2;
  const financialAccount=fdi+portfolio+externalDebtFlows+tradeCredit;
  const capitalTransfers=12;
