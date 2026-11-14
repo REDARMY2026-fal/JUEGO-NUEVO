@@ -48,13 +48,39 @@ html{scroll-behavior:smooth}body{background:radial-gradient(ellipse at 15% -10%,
 @media(max-width:700px){.finance-grid{grid-template-columns:1fr}.objective{grid-template-columns:1fr}.objective-reward{white-space:normal}}
 /* Macroeconomía 0.3 */
 .macro-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.chart-panel{min-width:0}.chart-wrap{width:100%;overflow:hidden}.line-chart{width:100%;height:auto;display:block;min-height:150px}.chart-legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:10px;margin-top:5px}.chart-legend i{display:inline-block;width:15px;height:3px;border-radius:3px;vertical-align:middle;margin-right:4px;background:var(--cyan)}.macro-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.macro-kpi{padding:10px;background:#1b2c3c;border:1px solid var(--line);border-radius:9px;min-width:0}.macro-kpi small{display:block;color:var(--muted);font-size:10px}.macro-kpi b{display:block;font-size:17px;font-variant-numeric:tabular-nums}.macro-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.macro-action{border:1px solid var(--line);background:#1a2b3c;border-radius:9px;padding:11px;text-align:left}.macro-action b{display:block;font-size:12px}.macro-action small{display:block;color:var(--muted);font-size:10px;margin-top:4px}@media(max-width:800px){.macro-grid{grid-template-columns:1fr}.macro-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Lobby y perfil ideológico */
+.lobby{position:fixed;inset:0;z-index:1000;background:radial-gradient(ellipse at 50% 0%,#29435a 0,#0a111a 68%);display:grid;place-items:center;padding:18px;overflow:auto}
+.lobby-card{width:min(940px,100%);background:linear-gradient(145deg,#192b3e,#101b28);border:1px solid #39516a;border-radius:20px;padding:clamp(18px,4vw,36px);box-shadow:0 28px 90px #0009}
+.lobby-eyebrow{color:#e6b75c;font-size:11px;font-weight:800;letter-spacing:.2em}.lobby-title{font-size:clamp(28px,5vw,48px);line-height:1.04;margin:8px 0}.lobby-copy{color:#a9bacb;max-width:680px}.lobby-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px 0}.ideology-card{border:1px solid #354b61;background:#142334;border-radius:12px;padding:13px;text-align:left;min-height:130px;transition:.15s}.ideology-card.selected{border-color:#e6b75c;box-shadow:inset 0 0 0 1px #e6b75c;background:#263447}.ideology-card b{display:block;margin-bottom:5px}.ideology-card small{color:#a9bacb;line-height:1.4}.lobby-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.lobby-note{font-size:11px;color:#91a4b8;margin-top:13px}
+@media(max-width:700px){.lobby-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.lobby-card{padding:18px}}
+@media(max-width:420px){.lobby-grid{grid-template-columns:1fr}.ideology-card{min-height:0}}
+
 </style>
 </head>
 <body>
+<div class="lobby" id="lobby" hidden><div class="lobby-card">
+ <div class="lobby-eyebrow">SIMULADOR POLÍTICO · ARGENTINA</div>
+ <h1 class="lobby-title">RECONSTRUCCIÓN<br>NACIONAL</h1>
+ <p class="lobby-copy">Un país no se reconstruye con una sola decisión. Elegí un rumbo político, administrá recursos, negociá con los sectores sociales y enfrentá las consecuencias de cada gobierno.</p>
+ <h3>Elegí la orientación ideológica de tu gobierno</h3>
+ <p class="sub">La ideología define prioridades y modifica gradualmente los efectos de tus políticas. No determina automáticamente todas tus decisiones.</p>
+ <div class="lobby-grid" id="ideologyChoices">
+  <button class="ideology-card selected" data-ideology="socialdemocracy"><b>Socialdemocracia</b><small>Estado de bienestar, servicios públicos, regulación y mercado mixto.</small></button>
+  <button class="ideology-card" data-ideology="liberalism"><b>Liberalismo</b><small>Competencia, apertura comercial, iniciativa privada y disciplina fiscal.</small></button>
+  <button class="ideology-card" data-ideology="developmentalism"><b>Desarrollismo</b><small>Industria nacional, infraestructura, inversión y planificación estratégica.</small></button>
+  <button class="ideology-card" data-ideology="conservatism"><b>Conservadurismo</b><small>Orden institucional, gradualismo, tradición y estabilidad presupuestaria.</small></button>
+  <button class="ideology-card" data-ideology="socialism"><b>Socialismo democrático</b><small>Redistribución, empresas públicas, derechos laborales y planificación social.</small></button>
+  <button class="ideology-card" data-ideology="nationalism"><b>Nacionalismo económico</b><small>Soberanía productiva, protección de sectores estratégicos y mercado interno.</small></button>
+ </div>
+ <div class="detail-grid"><div class="detail"><small>Nombre del gobierno</small><input id="lobbyGovernment" maxlength="36" value="Gobierno Nacional" style="width:100%;margin-top:6px"></div><div class="detail"><small>Presidencia</small><input id="lobbyPresident" maxlength="28" value="Presidente/a" style="width:100%;margin-top:6px"></div></div>
+ <div class="lobby-actions" style="margin-top:16px"><button class="btn primary" id="lobbyContinue">Continuar partida →</button><button class="btn" id="lobbyNew">Comenzar nueva campaña</button></div>
+ <p class="lobby-note" id="lobbyNote">Tu partida se guarda localmente en este navegador. La nueva campaña reemplazará el guardado actual solo si confirmás.</p>
+ </div></div>
 <div class="app">
 <header class="top">
  <div class="brand"><div class="flag"></div><div><h1>RECONSTRUCCIÓN NACIONAL</h1><small>SIMULADOR DE GESTIÓN · ARGENTINA</small></div></div>
- <div class="top-actions"><span class="date" id="date">Año 1 · Trimestre 1</span><button class="btn" id="helpBtn">? Ayuda</button><button class="btn" id="saveBtn">Guardar</button><button class="btn warn" id="resetBtn">Nueva partida</button></div>
+ <div class="top-actions"><span class="date" id="date">Año 1 · Trimestre 1</span><button class="btn" id="lobbyBtn">⌂ Lobby</button><button class="btn" id="helpBtn">? Ayuda</button><button class="btn" id="saveBtn">Guardar</button><button class="btn warn" id="resetBtn">Nueva partida</button></div>
 </header>
 <section class="metrics" id="metrics"></section>
 <div class="layout">
@@ -197,7 +223,7 @@ const cities=[
 ["La Plata","Mar del Plata","Bahía Blanca","Tandil"],["Ciudad Autónoma de Buenos Aires"],["San Fernando del Valle de Catamarca","Belén","Andalgalá"],["Resistencia","Presidencia Roque Sáenz Peña","Villa Ángela"],["Rawson","Comodoro Rivadavia","Trelew","Puerto Madryn"],["Córdoba","Río Cuarto","Villa María","San Francisco"],["Corrientes","Goya","Paso de los Libres"],["Paraná","Concordia","Gualeguaychú"],["Formosa","Clorinda","Pirané"],["San Salvador de Jujuy","Palpalá","Libertador General San Martín"],["Santa Rosa","General Pico","Toay"],["La Rioja","Chilecito","Aimogasta"],["Mendoza","San Rafael","Godoy Cruz","San Martín"],["Posadas","Oberá","Eldorado","Puerto Iguazú"],["Neuquén","Cutral Có","Zapala","San Martín de los Andes"],["Viedma","San Carlos de Bariloche","General Roca","Cipolletti"],["Salta","Tartagal","San Ramón de la Nueva Orán","Cafayate"],["San Juan","Rawson","Caucete"],["San Luis","Villa Mercedes","Merlo"],["Río Gallegos","Caleta Olivia","El Calafate"],["Santa Fe","Rosario","Rafaela","Reconquista"],["Santiago del Estero","La Banda","Termas de Río Hondo"],["Ushuaia","Río Grande","Tolhuin"],["San Miguel de Tucumán","Tafí Viejo","Concepción"]
 ];
 const initial=()=>({
-year:1,quarter:1,money:18500,debt:6200,loans:[],creditScore:54,objectives:[],approval:54,stability:61,employment:58,education:57,health:63,poverty:34,productivity:49,industry:46,agriculture:61,energy:55,roads:48,ports:52,water:65,housing:51,admin:48,taxRate:22,investment:35,trade:42,tech:28,maintenance:40,foodSupply:66,training:34,provinceBoost:{},selectedProvince:0,selectedCity:0,history:[],tutorialDone:false,turns:0,party:"Coalición Federal",president:"Gobierno Nacional"
+year:1,quarter:1,money:18500,debt:6200,loans:[],creditScore:54,objectives:[],approval:54,stability:61,employment:58,education:57,health:63,poverty:34,productivity:49,industry:46,agriculture:61,energy:55,roads:48,ports:52,water:65,housing:51,admin:48,taxRate:22,investment:35,trade:42,tech:28,maintenance:40,foodSupply:66,training:34,provinceBoost:{},selectedProvince:0,selectedCity:0,history:[],tutorialDone:false,turns:0,party:"Coalición Federal",president:"Gobierno Nacional",ideology:"socialdemocracy",ideologySetup:false
 });
 let s=load();
 function load(){try{const raw=localStorage.getItem("rn_save_v1");if(raw){const data=JSON.parse(raw);return Object.assign(initial(),data)}}catch(e){}return initial()}
@@ -457,7 +483,45 @@ document.addEventListener("click",function(e){
 });
 ensureMacroState();const renderBeforeMacro=render;render=function(){renderBeforeMacro();renderMacro()};
 
+/* Lobby, identidad de gobierno e ideologías */
+const ideologyNames={socialdemocracy:"Socialdemocracia",liberalism:"Liberalismo",developmentalism:"Desarrollismo",conservatism:"Conservadurismo",socialism:"Socialismo democrático",nationalism:"Nacionalismo económico"};
+let selectedIdeology="socialdemocracy";
+function openLobby(){
+ selectedIdeology=s.ideology||"socialdemocracy";
+ document.querySelectorAll("[data-ideology]").forEach(b=>b.classList.toggle("selected",b.dataset.ideology===selectedIdeology));
+ $("lobbyGovernment").value=s.party||"Gobierno Nacional";$("lobbyPresident").value=s.president||"Presidente/a";
+ $("lobbyContinue").hidden=!s.turns&&!localStorage.getItem("rn_save_v1");
+ $("lobbyNote").textContent=s.turns||localStorage.getItem("rn_save_v1")?"Podés continuar tu partida. Una nueva campaña reemplazará el guardado actual únicamente después de confirmar.":"Elegí una orientación y comenzá tu primera campaña.";
+ $("lobby").hidden=false;
+}
+document.querySelectorAll("[data-ideology]").forEach(b=>b.addEventListener("click",()=>{selectedIdeology=b.dataset.ideology;document.querySelectorAll("[data-ideology]").forEach(x=>x.classList.toggle("selected",x===b))}));
+$("lobbyBtn").addEventListener("click",openLobby);
+$("lobbyContinue").addEventListener("click",()=>{$("lobby").hidden=true;render()});
+$("lobbyNew").addEventListener("click",()=>{
+ const hasSave=!!localStorage.getItem("rn_save_v1");
+ if(hasSave&&!confirm("¿Comenzar una campaña nueva? Esto reemplazará el guardado local actual. Exportá tu partida antes si querés conservarla."))return;
+ s=initial();s.ideology=selectedIdeology;s.ideologySetup=true;s.party=($("lobbyGovernment").value.trim()||"Gobierno Nacional");s.president=($("lobbyPresident").value.trim()||"Presidente/a");
+ log("Inicio de campaña","Se formó "+s.party+" bajo una orientación de "+ideologyNames[s.ideology]+". Comienza la reconstrucción nacional.");
+ save();$("lobby").hidden=true;render();toast("Nueva campaña iniciada.");
+});
+function ideologyDescription(){
+ const d={socialdemocracy:"Estado de bienestar y economía mixta",liberalism:"Competencia, apertura y sector privado",developmentalism:"Industria, infraestructura e inversión",conservatism:"Orden institucional y gradualismo",socialism:"Redistribución y planificación social",nationalism:"Soberanía productiva y mercado interno"};
+ return d[s.ideology]||d.socialdemocracy;
+}
+function ideologyModifiers(){
+ switch(s.ideology){
+  case "liberalism":return {privateInvestment:.10,trade:.12,publicCost:.025,formal:.015};
+  case "developmentalism":return {industry:.12,investment:.10,trade:-.025,publicCost:.02};
+  case "conservatism":return {stability:.10,fiscal:.08,publicCost:-.02,formal:-.01};
+  case "socialism":return {poverty:.12,formal:.08,publicCost:.045,privateInvestment:-.035};
+  case "nationalism":return {industry:.08,trade:-.08,food:.04,publicCost:.025};
+  default:return {poverty:.08,formal:.05,publicCost:.025,privateInvestment:.015};
+ }
+}
+
+
 render();
+if(!s.ideologySetup)openLobby();
 
 })();
 </script>
