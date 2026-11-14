@@ -100,7 +100,7 @@ html{scroll-behavior:smooth}body{background:radial-gradient(ellipse at 15% -10%,
  </aside>
  <main class="main">
   <section class="view active" id="view-overview">
-   <div class="view-head"><div><h2>Centro de mando</h2><p>Tu objetivo: estabilizar la economía y reconstruir la capacidad productiva del país.</p></div><span class="pill" id="phase">PLANIFICACIÓN</span></div>
+   <div class="view-head"><div><h2>Centro de mando</h2><p>Tu objetivo: estabilizar la economía y reconstruir la capacidad productiva del país.</p><p class="sub" id="governmentIdentity"></p></div><span class="pill" id="phase">PLANIFICACIÓN</span></div>
    <div class="grid2">
     <div>
      <div class="panel"><h3>Situación nacional</h3><div id="nationalBars"></div></div>
@@ -237,6 +237,7 @@ function metric(label,value,note,cls){return '<div class="metric"><label>'+label
 function bar(label,value,color,desc){return '<div class="statline"><span>'+label+'</span><b>'+Math.round(value)+'/100</b></div><div class="bar '+(color||"")+'"><span style="width:'+clamp(value)+'%"></span></div>'+(desc?'<div class="sub">'+desc+'</div>':"")}
 function render(){
  $("date").textContent="Año "+s.year+" · Trimestre "+s.quarter;
+ if($("governmentIdentity"))$("governmentIdentity").textContent=(s.party||"Gobierno Nacional")+" · "+ideologyNames[s.ideology] + " · "+ideologyDescription();
  $("metrics").innerHTML=metric("Tesoro disponible",fmt(s.money),"Deuda: "+fmt(s.debt),s.money<2500?"bad":"")+
  metric("Aprobación",Math.round(s.approval)+"%","Respaldo social",s.approval<35?"bad":"good")+
  metric("Índice de empleo",Math.round(s.employment)+"%","Actividad laboral agregada")+
@@ -457,9 +458,12 @@ function evolveMacroeconomy(fiscalNet){
  const tradeFlow=(s.trade-45)*95+(s.agriculture-50)*38-(s.industry<40?250:0),fiscalReserveFlow=fiscalNet>0?Math.min(650,fiscalNet*.08):Math.max(-700,fiscalNet*.1);
  s.reserves=clamp(s.reserves+tradeFlow+fiscalReserveFlow-(gap>35?220:0),500,60000);
  s.priceIndex*=1+s.inflation/100;s.wageIndex*=1+Math.max(0,s.inflation*.72+(s.employment-55)*.025)/100;
- const activity=(s.industry-50)*.035+(s.agriculture-50)*.018+(s.investment-50)*.012;
+ const im=ideologyModifiers();
+ const activity=(s.industry-50)*.035+(s.agriculture-50)*.018+(s.investment-50)*.012+(im.industry||0)*.08;
+ s.investment=clamp(s.investment+(im.privateInvestment||0)*.5);
  s.unemployment=clamp(s.unemployment-activity+(s.inflation>12?.12:0)+(s.stability<35?.2:0),3,28);
- s.formalShare=clamp(s.formalShare+(s.admin-50)*.012+(s.investment-50)*.008-(s.unemployment>15?.08:0),25,75);
+ s.formalShare=clamp(s.formalShare+(s.admin-50)*.012+(s.investment-50)*.008+(im.formal||0)-(s.unemployment>15?.08:0),25,75);
+ s.poverty=clamp(s.poverty-(im.poverty||0)*.10);
 }
 function svgLineChart(rows,series,format){
  const W=520,H=178,L=48,R=12,T=12,B=28,all=rows.flatMap(r=>series.map(q=>Number(r[q.key])||0));let min=Math.min(...all),max=Math.max(...all);if(!Number.isFinite(min)||!Number.isFinite(max)){min=0;max=1}if(max===min){max+=1;min=Math.max(0,min-1)}const pad=(max-min)*.16;min=Math.max(0,min-pad);max+=pad;
