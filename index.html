@@ -383,8 +383,9 @@ document.addEventListener("click",function(e){
  }
  if(kind==="restructure"){
   if(s.debt<8000){toast("La deuda todavía no justifica una reestructuración.");return}
+  if(!s.loans.length||s.restructureUsed){toast("No hay créditos elegibles o ya usaste la reestructuración de esta partida.");return}
   s.loans.forEach(l=>{l.rate=Math.max(.035,l.rate-.02);l.term+=4;l.remaining+=4});
-  s.creditScore=clamp(s.creditScore-8);s.stability=clamp(s.stability-2);
+  s.restructureUsed=true;s.creditScore=clamp(s.creditScore-8);s.stability=clamp(s.stability-2);
   log("Reestructuración de deuda","Se extendieron plazos y redujeron tasas de créditos específicos. La confianza de acreedores cayó temporalmente.");
   render();toast("Nueva estructura de vencimientos acordada.");
  }
