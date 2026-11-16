@@ -472,24 +472,15 @@ function finalizePaso(){
  log("Resultado de las PASO",winner.name+" ganó la interna de "+state.party+" con "+winner.share.toFixed(1)+"%. "+(winner.player?"Tu personaje será la cara presidencial del espacio.":"Tu precandidatura perdió; la fuerza eligió a "+winner.name+"."));
  persist();toast(winner.player?"¡Ganaste las PASO! Ahora elegí vicepresidente.":"La interna eligió a otra persona. Podés continuar la campaña del partido.");
 }
-function conductPaso(){return}
-function conductPaso(){
- if(state.pasoDoneYear===state.nextElectionYear)return;
- const current=state.pasoCandidate||state.campaignCandidate||state.president,share=clamp(49+(state.approval-50)*.18+(state.stability-50)*.08+state.pasoScore*2.4+(Math.random()*16-8),20,78),won=share>=50;
- const alternatives=[{name:"Lucía Fernández",vice:"Rafael Soria"},{name:"Diego Mansilla",vice:"Marta Quiroga"}],rival=alternatives[Math.floor(Math.random()*alternatives.length)];
- if(!won){state.pasoCandidate=rival.name}else{state.pasoCandidate=current}state.pasoViceCandidate="";state.campaignVice="";
- state.lastPaso={year:state.nextElectionYear,winner:state.pasoCandidate,vice:"Fórmula pendiente",won,share:Math.round(share*10)/10};state.pasoDoneYear=state.nextElectionYear;state.pasoScore=0;state.pasoActions=[];
- log("Resultado de las PASO",state.pasoCandidate+" ganó la interna de "+state.party+". Ahora corresponde elegir la vicepresidencia y completar la fórmula presidencial.");
-}
 function conductElection(){
- if(state.lastElection&&Array.isArray(state.lastElection.candidates)&&!state.lastElection.finished)return;
+ if(state.electionPhase!=="general_campaign"||!state.campaignVice||state.lastElection&&!state.lastElection.finished)return;
  const forced=state.inaugurated&&state.consecutiveTerms>=2;
  const opposition=[{name:"Valentina Ríos",vice:"Tomás Aguirre",party:"Alianza Federal",ideology:"developmentalism"},{name:"Martín Aguirre",vice:"Paula Méndez",party:"Frente Republicano",ideology:"liberalism"},{name:"Camila Benítez",vice:"Julián Sosa",party:"Unión Popular",ideology:"socialdemocracy"},{name:"Santiago Ferreyra",vice:"Clara Ibáñez",party:"Coalición Nacional",ideology:"conservatism"}];
- const ticket={name:state.campaignCandidate||state.president||"Candidatura oficial",vice:state.campaignVice||state.vicePresident||"Vicepresidencia pendiente",party:state.party,ideology:state.ideology,player:true};
- const candidates=forced?[{name:"Marina Quiroga",vice:"Rafael Soria",party:state.party,ideology:state.ideology,player:true},...opposition]:[ticket,...opposition];
+ const ticket={name:state.campaignCandidate,vice:state.campaignVice,party:state.party,ideology:state.ideology,player:!!state.pasoQualified};
+ const candidates=[ticket,...opposition];
  state.lastElection={year:state.nextElectionYear,previousPresident:state.president||"",previousParty:state.party,forced,round:1,campaignScore:state.electionScore,counted:0,totalVotes:0,districts:["Buenos Aires","CABA","Catamarca","Chaco","Chubut","Córdoba","Corrientes","Entre Ríos","Formosa","Jujuy","La Pampa","La Rioja","Mendoza","Misiones","Neuquén","Río Negro","Salta","San Juan","San Luis","Santa Cruz","Santa Fe","Santiago del Estero","Tierra del Fuego","Tucumán"].map(name=>({name,votes:candidates.map(()=>0)})),candidates:candidates.map(c=>({...c,votes:0,share:0})),finished:false,needsRunoff:false};
- state.nextElectionYear+=4;state.electionScore=0;state.electionActions=[];
- log("Apertura de elecciones generales","Se abrieron las urnas. La ciudadanía vota entre las fórmulas presentadas; el resultado se conocerá con el escrutinio.");
+ state.electionPhase="general_voting";
+ log("Apertura de elecciones generales","Se abrieron las urnas. La fórmula "+ticket.name+" – "+ticket.vice+" compite por "+state.party+". El resultado se conocerá con el escrutinio.");
 }
 function electionCandidateWeights(last){
  return last.candidates.map((c,i)=>{
@@ -508,7 +499,7 @@ function finalizeElection(){
  last.winner=winner.name;last.winnerParty=winner.party;last.vice=winner.vice;last.vote=winner.share;last.won=!!winner.player;last.tally=last.candidates.map(c=>({name:c.name,party:c.party,share:c.share}));last.finished=true;last.needsRunoff=false;
  state.president=winner.name;state.inaugurated=!!winner.player;state.vicePresident=winner.vice;state.party=winner.party;state.ideology=winner.ideology;state.consecutiveTerms=winner.player?(last.forced?1:Math.min(2,(state.consecutiveTerms||0)+1)):0;
  state.approval=clamp(winner.player?Math.max(state.approval,51):48,35,65);state.stability=clamp(state.stability+(winner.player?1.5:-1.5));
- if(winner.player){state.campaignCandidate=winner.name;state.campaignVice=winner.vice}
+ if(winner.player){state.campaignCandidate=winner.name;state.campaignVice=winner.vice}state.electionPhase="government";state.nextPasoYear=state.year+3;state.nextElectionYear=state.year+4;state.pasoQualified=false;state.electionScore=0;state.electionActions=[];
  log(last.round===2?"Resultado del balotaje":"Escrutinio definitivo",winner.name+" – "+winner.vice+" ganó con "+winner.share.toFixed(1)+"% de los votos. "+(winner.player?"Asumís la presidencia.":"La oposición ganó la elección."));
  persist();
 }
@@ -540,15 +531,30 @@ let scrutinyTimer=null;function startLiveScrutiny(){
   persist();renderElections();
  },520);
 }
-function renderElections(){
- const primary=false,open=electionWindow(),forced=state.inaugurated&&state.consecutiveTerms>=2;
- const pasoInfo="";
- $("electionStatus").innerHTML='<div class="kpi-grid"><div class="kpi"><small>Próxima elección</small><b>Año '+state.nextElectionYear+'</b></div><div class="kpi"><small>Mandato actual</small><b>'+(!state.inaugurated?'Sin mandato':state.consecutiveTerms===1?'Primer mandato':'Segundo mandato')+'</b></div><div class="kpi"><small>Respaldo presidencial</small><b>'+Math.round(state.approval)+'%</b></div><div class="kpi"><small>Campaña general</small><b>'+state.electionScore.toFixed(1)+' pts</b></div></div><div class="notice" style="margin-top:10px">'+(primary?"":open?(forced?"No podés competir por una tercera reelección consecutiva. Tu espacio debe presentar un sucesor.":"Campaña electoral abierta. Completá la fórmula y prepará la elección general."):"Próxima elección general: año "+state.nextElectionYear+". La campaña se abre durante el año previo.")+'</div>'+pasoInfo;
- $("electionActions").innerHTML=electionActionsMarkup();
- const last=state.lastElection;$("electionResults").innerHTML=last?'<div class="row-card"><b>'+(last.finished?'Resultado definitivo · Año ':'Escrutinio provisorio · Año ')+last.year+'</b><small>'+(last.finished?'Ganador: '+escapeHTML(last.winner)+' · '+escapeHTML(last.winnerParty):'Todavía no hay ganador proclamado')+'</small><small>'+(last.finished?'Fórmula: '+escapeHTML(last.winner)+' – '+escapeHTML(last.vice):'Los porcentajes pueden cambiar con cada tanda de votos')+'</small></div><div class="scrutiny-panel"><div class="scrutiny-head"><b>Escrutinio nacional</b><span class="tag">SIMULACIÓN LOCAL</span></div><div class="scrutiny-stats"><strong>'+(last.counted||0)+'%</strong><span>de mesas escrutadas · '+fmt(last.totalVotes||0)+' votos computados</span></div><div class="scrutiny-track"><i style="width:'+(last.counted||0)+'%"></i></div><div class="scrutiny-results">'+(last.candidates||[]).map(x=>'<div class="scrutiny-row"><div><b>'+escapeHTML(x.party)+'</b><small>'+escapeHTML(x.name)+'</small></div><strong>'+(last.counted>=8?x.share.toFixed(1):"En recuento")+'%</strong></div>').join('')+'</div>'+(last.districts&&last.counted>=8?'<div class="decision"><h4>Resultados por distrito</h4><div class="scrutiny-results">'+last.districts.map(d=>{const total=d.votes.reduce((a,b)=>a+b,0),top=d.votes.indexOf(Math.max(...d.votes));return '<div class="scrutiny-row"><div><b>'+escapeHTML(d.name)+'</b><small>'+(total?escapeHTML(last.candidates[top]?.name||"Sin datos"):"Mesas pendientes")+'</small></div><strong>'+(total?(d.votes[top]/total*100).toFixed(1)+"%":"—")+'</strong></div>'}).join("")+'</div></div>':'')+(last.finished?'<small class="sub">Recuento finalizado. Resultado de esta simulación local.</small>':last.needsRunoff?'<div class="notice">No hubo mayoría suficiente en primera vuelta. Corresponde un balotaje entre las dos fórmulas más votadas.</div><button class="btn primary" id="startScrutiny">Iniciar escrutinio del balotaje</button>':'<button class="btn primary" id="startScrutiny">Iniciar / continuar escrutinio</button><small class="sub">Los votos se acumulan por tandas. El ganador se define al finalizar el recuento.</small>')+'</div>':'<p class="sub">Todavía no comenzaron las elecciones generales.</p>'
- const scrutinyButton=$("startScrutiny");if(scrutinyButton)scrutinyButton.addEventListener("click",startLiveScrutiny);const vice=$("campaignViceSelect");if(vice)vice.addEventListener("change",()=>{state.campaignVice=vice.value;persist();renderElections()});
+function startPasoScrutiny(){
+ const last=state.lastPaso;if(!last||last.finished||scrutinyTimer)return;
+ const button=$("startPasoScrutiny");if(button)button.disabled=true;
+ scrutinyTimer=setInterval(()=>{
+  const chunk=Math.min(5,Math.floor(Math.random()*4)+2,100-last.counted),weights=primaryCandidateWeights(last),batch=Math.max(250,Math.round(chunk*380));
+  for(let v=0;v<batch;v++){const varied=weights.map(w=>w*(.82+Math.random()*.36)),sum=varied.reduce((a,b)=>a+b,0);let pick=Math.random()*sum,index=0;for(;index<varied.length-1;index++){pick-=varied[index];if(pick<=0)break}last.candidates[index].votes++}
+  last.totalVotes+=batch;last.counted=Math.min(100,last.counted+chunk);last.candidates.forEach(c=>c.share=last.totalVotes?Math.round(c.votes/last.totalVotes*1000)/10:0);
+  if(last.counted>=100){last.counted=100;finalizePaso();clearInterval(scrutinyTimer);scrutinyTimer=null}
+  persist();renderElections();
+ },520);
 }
-
+function renderElections(){
+ const phase=state.electionPhase||"primary_campaign";
+ $("electionStatus").innerHTML='<div class="kpi-grid"><div class="kpi"><small>Próximas PASO</small><b>Año '+state.nextPasoYear+'</b></div><div class="kpi"><small>Elección general</small><b>Año '+state.nextElectionYear+'</b></div><div class="kpi"><small>Respaldo</small><b>'+Math.round(state.approval)+'%</b></div><div class="kpi"><small>Etapa electoral</small><b>'+({primary_campaign:"Interna",primary_voting:"PASO",vice_selection:"Fórmula",general_campaign:"Campaña",general_voting:"Generales",government:"Gobierno"}[phase]||"Política")+'</b></div></div>';
+ $("electionActions").innerHTML=electionActionsMarkup();
+ const last=state.lastElection;
+ $("electionResults").innerHTML=last?'<div class="row-card"><b>'+(last.finished?'Resultado definitivo · Año ':'Escrutinio provisorio · Año ')+last.year+'</b><small>'+(last.finished?'Ganador: '+escapeHTML(last.winner)+' · '+escapeHTML(last.winnerParty):'Todavía no hay ganador proclamado')+'</small><small>'+(last.finished?'Fórmula: '+escapeHTML(last.winner)+' – '+escapeHTML(last.vice):'Los porcentajes pueden cambiar con cada tanda de votos')+'</small></div><div class="scrutiny-panel"><div class="scrutiny-head"><b>Escrutinio nacional</b><span class="tag">SIMULACIÓN LOCAL</span></div><div class="scrutiny-stats"><strong>'+(last.counted||0)+'%</strong><span>de mesas escrutadas · '+fmt(last.totalVotes||0)+' votos computados</span></div><div class="scrutiny-track"><i style="width:'+(last.counted||0)+'%"></i></div><div class="scrutiny-results">'+(last.candidates||[]).map(x=>'<div class="scrutiny-row"><div><b>'+escapeHTML(x.party)+'</b><small>'+escapeHTML(x.name)+'</small></div><strong>'+(last.counted>=8?x.share.toFixed(1):"En recuento")+'%</strong></div>').join('')+'</div>'+(last.finished?'<small class="sub">Recuento finalizado.</small>':last.needsRunoff?'<div class="notice">Corresponde un balotaje entre las dos fórmulas más votadas.</div><button class="btn primary" id="startScrutiny">Iniciar escrutinio del balotaje</button>':'<button class="btn primary" id="startScrutiny">Iniciar / continuar escrutinio</button><small class="sub">El resultado se define al finalizar el recuento.</small>')+'</div>':'<p class="sub">Todavía no comenzaron las elecciones generales.</p>';
+ const pasoButton=$("startPasoScrutiny");if(pasoButton)pasoButton.addEventListener("click",startPasoScrutiny);
+ const scrutinyButton=$("startScrutiny");if(scrutinyButton)scrutinyButton.addEventListener("click",startLiveScrutiny);
+ document.querySelectorAll("[data-paso-action]").forEach(b=>b.addEventListener("click",()=>runPasoAction(b.dataset.pasoAction)));
+ document.querySelectorAll("[data-election]").forEach(b=>b.addEventListener("click",()=>runElectionAction(b.dataset.election)));
+ const vice=$("campaignViceSelect");if(vice)vice.addEventListener("change",()=>{state.campaignVice=vice.value;persist();renderElections()});
+ const confirm=$("confirmPresidentialTicket");if(confirm)confirm.addEventListener("click",()=>{if(!state.campaignVice)return;state.electionPhase="general_campaign";state.electionScore=0;state.electionActions=[];log("Fórmula oficializada",state.campaignCandidate+" – "+state.campaignVice+" representará a "+state.party+" en las elecciones generales.");persist();renderElections()});
+}
 function closeQuarter(){updatePrivateCompanies();const net=income()-expenses();state.money+=net;if(state.money<0){state.debt+=-state.money;state.money=0;state.stability=clamp(state.stability-4);state.approval=clamp(state.approval-3)}else if(net>0){state.debt=Math.max(0,state.debt-net*.1);state.stability=clamp(state.stability+1)}
  const im=ideologyEffects();state.industry=clamp(state.industry+(Math.min(state.energy,state.roads,state.agriculture)-45)*.035+(im.industry||0));state.productivity=clamp(state.productivity+(state.roads+state.energy+state.education-150)*.012+(state.maintenance-50)*.009);state.employment=clamp(state.employment+(state.industry+state.agriculture-110)*.025+(state.roads>60?.3:0)+(state.investment-50)*.012);state.poverty=clamp(state.poverty-(state.employment-50)*.035-(state.foodSupply-50)*.018-(im.poverty||0)*.1);state.approval=clamp(state.approval+(state.employment-55)*.035+(state.health-60)*.018-(state.poverty-30)*.045);state.stability=clamp(state.stability+(state.approval-50)*.025+(state.admin-50)*.015);state.investment=clamp(state.investment+(state.stability-50)*.025+(state.trade-50)*.02+(im.investment||0)*.1);state.foodSupply=clamp(state.foodSupply+(state.agriculture-55)*.025);state.creditScore=clamp(state.creditScore+(net>0?.7:-.9)+(state.stability-50)*.015);
  const gap=Math.max(0,(state.parallelFx/state.officialFx-1)*100),pressure=clamp((gap-10)*.018,0,1.8),resPressure=state.reserves<5000?1.5:state.reserves<10000?.6:0,fiscalPressure=net<0?Math.min(1.8,Math.abs(net)/4500):Math.min(.55,net/9000),relief=(state.foodSupply-55)*.018+(state.energy-50)*.012,stabilize=state.antiInflationTurns>0?1:0;
