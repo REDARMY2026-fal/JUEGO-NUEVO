@@ -414,21 +414,63 @@ function updatePrivateCompanies(){state.privateCompanies.forEach(c=>{const secto
 function pasoWindow(){return false}
 function electionWindow(){return state.electionPhase==="general_campaign"}
 function electionActionsMarkup(){
- if(!electionWindow())return '<div class="notice">No hay una campaña electoral abierta. La próxima campaña comienza durante el año '+(state.nextElectionYear-1)+'.</div>';
- const actions=[["tour","Recorrida federal",320,"Visitá provincias y municipios para presentar tu propuesta.",3.5],["debate","Debate presidencial",180,"Participá en debates y respondé preguntas de la ciudadanía.",2.2],["pact","Acuerdo de gobernadores",420,"Buscá apoyos territoriales para tu programa.",3.1],["platform","Plataforma de gobierno",260,"Publicá compromisos y objetivos verificables.",2.5]];
- const options=["Victoria Villarruel","Victoria Tolosa Paz","Martín Lousteau","Carolina Píparo","Myriam Bregman","Juan Schiaretti","Andrés Molina","Marta Quiroga"];
- return '<div class="notice">CAMPAÑA ELECTORAL · '+escapeHTML(state.campaignCandidate)+' es tu candidato/a. La elección se define mediante el voto ciudadano; no hay una interna automática ni un resultado decidido de antemano.</div><div class="decision"><h4>Fórmula electoral</h4><b>Presidencia: '+escapeHTML(state.campaignCandidate)+'</b><label class="field-label" for="campaignViceSelect">Candidato/a a vicepresidente/a</label><select class="setup-select" id="campaignViceSelect"><option value="">Seleccioná a tu compañero/a de fórmula</option>'+options.map(n=>'<option value="'+escapeHTML(n)+'" '+(state.campaignVice===n?'selected':'')+'>'+escapeHTML(n)+'</option>').join("")+'</select><p>La fórmula debe estar completa antes de la elección general.</p></div>'+actions.map(x=>{const used=state.electionActions.includes(x[0]);return '<div class="decision"><h4>'+x[1]+'</h4><p>'+x[3]+'</p><button class="btn" data-election="'+x[0]+'" '+(used?'disabled':'')+'>'+(used?'Realizada':'Invertir · '+fmt(x[2]))+'</button></div>'}).join("")+'<div class="decision"><h4>Balance de campaña</h4><p>Las recorridas, debates, acuerdos y la situación del país afectan tus posibilidades. El voto incorpora variación e incertidumbre.</p><b>'+state.electionScore.toFixed(1)+' puntos de campaña</b></div>';
+ const phase=state.electionPhase||"primary_campaign";
+ if(phase==="primary_campaign"){
+  const actions=[["tour","Recorrida por el partido",220,"Construí apoyo entre afiliados y referentes de tu espacio.",2.7],["debate","Debate interno",140,"Defendé tu programa frente a los otros precandidatos.",2.2],["rally","Acto partidario",190,"Movilizá militantes y estructuras territoriales.",2.5],["endorsement","Acuerdo con dirigentes",280,"Conseguí respaldos de intendentes, legisladores y gobernadores.",3]];
+  return '<div class="notice"><b>ETAPA 1 · INTERNAS ABIERTAS</b><br>Tu personaje todavía es precandidato/a. Primero debe ganar las PASO de '+escapeHTML(state.party)+' para convertirse en la cara presidencial del espacio.</div><div class="decision"><h4>Precandidaturas de '+escapeHTML(state.party)+'</h4>'+state.primaryCandidates.map(c=>'<div class="scrutiny-row"><div><b>'+escapeHTML(c.name)+'</b><small>'+(c.player?"Tu precandidatura":"Competidor/a interno/a")+'</small></div><strong>'+(c.player?"TU LISTA":"RIVAL")+'</strong></div>').join("")+'</div>'+actions.map(x=>'<div class="decision"><h4>'+x[1]+'</h4><p>'+x[3]+'</p><button class="btn" data-paso-action="'+x[0]+'" '+(state.pasoActions.includes(x[0])?'disabled':'')+'>'+(state.pasoActions.includes(x[0])?'Realizada':'Invertir · '+fmt(x[2]))+'</button></div>').join("")+'<div class="decision"><b>Respaldo interno acumulado: '+state.pasoScore.toFixed(1)+' pts</b><p>Las acciones mejoran tus posibilidades, pero no garantizan ganar. El escrutinio tendrá variación aleatoria.</p></div>';
+ }
+ if(phase==="primary_voting"){
+  const last=state.lastPaso;return '<div class="notice"><b>ETAPA 2 · PASO DE '+escapeHTML(state.party)+'</b><br>La ciudadanía está eligiendo quién representará al partido en las elecciones generales.</div><div class="scrutiny-panel"><div class="scrutiny-head"><b>Escrutinio de las PASO</b><span class="tag">INTERNA PARTIDARIA</span></div><div class="scrutiny-stats"><strong>'+(last?.counted||0)+'%</strong><span>de mesas escrutadas · '+fmt(last?.totalVotes||0)+' votos</span></div><div class="scrutiny-track"><i style="width:'+(last?.counted||0)+'%"></i></div><div class="scrutiny-results">'+(last?.candidates||[]).map(c=>'<div class="scrutiny-row"><div><b>'+escapeHTML(c.name)+'</b><small>'+(c.player?"Tu precandidatura":"Lista interna")+'</small></div><strong>'+(last.counted>=5?c.share.toFixed(1)+"%":"En recuento")+'</strong></div>').join("")+'</div>'+(last?.finished?'<p class="sub">Interna finalizada.</p>':'<button class="btn primary" id="startPasoScrutiny">Iniciar / continuar escrutinio de las PASO</button>')+'</div>';
+ }
+ if(phase==="vice_selection"){
+  const options=viceCandidatesFor(state.party,state.campaignCandidate);
+  return '<div class="notice"><b>ETAPA 3 · FÓRMULA PRESIDENCIAL</b><br>Ganador/a de las PASO: <b>'+escapeHTML(state.campaignCandidate)+'</b>. Ahora se elige la vicepresidencia dentro del mismo partido.</div><div class="decision"><h4>Elegí compañero/a de fórmula</h4><label class="field-label" for="campaignViceSelect">Vicepresidencia · '+escapeHTML(state.party)+'</label><select class="setup-select" id="campaignViceSelect"><option value="">Seleccioná una figura de tu partido</option>'+options.map(n=>'<option value="'+escapeHTML(n)+'" '+(state.campaignVice===n?'selected':'')+'>'+escapeHTML(n)+'</option>').join("")+'</select><small class="sub">Solo aparecen dirigentes del espacio elegido.</small><button class="btn primary" id="confirmPresidentialTicket" '+(!state.campaignVice?'disabled':'')+'>Confirmar fórmula y pasar a campaña general →</button></div>';
+ }
+ if(phase==="general_campaign"){
+  const actions=[["tour","Recorrida federal",320,"Visitá provincias y municipios para presentar tu propuesta.",3.5],["debate","Debate presidencial",180,"Participá en debates y respondé preguntas de la ciudadanía.",2.2],["pact","Acuerdo de gobernadores",420,"Buscá apoyos territoriales para tu programa.",3.1],["platform","Plataforma de gobierno",260,"Publicá compromisos y objetivos verificables.",2.5]];
+  return '<div class="notice"><b>ETAPA 4 · ELECCIONES GENERALES</b><br>La fórmula '+escapeHTML(state.campaignCandidate)+' – '+escapeHTML(state.campaignVice)+' representa a '+escapeHTML(state.party)+'. Ahora competís contra las demás fuerzas.</div>'+actions.map(x=>'<div class="decision"><h4>'+x[1]+'</h4><p>'+x[3]+'</p><button class="btn" data-election="'+x[0]+'" '+(state.electionActions.includes(x[0])?'disabled':'')+'>'+(state.electionActions.includes(x[0])?'Realizada':'Invertir · '+fmt(x[2]))+'</button></div>').join("")+'<div class="decision"><b>Balance de campaña: '+state.electionScore.toFixed(1)+' puntos</b><p>La situación económica, social y política afecta el voto.</p></div>';
+ }
+ if(phase==="general_voting")return '<div class="notice"><b>ETAPA 5 · ELECCIONES GENERALES</b><br>La fórmula presidencial ya está definida. El escrutinio nacional está en marcha.</div>';
+ return '<div class="notice">Mandato en curso. La próxima interna partidaria se abrirá en el año '+Math.max(state.year,state.nextPasoYear-1)+'.</div>';
 }
 function runElectionAction(key){
  const actions={tour:[320,3.5],debate:[180,2.2],pact:[420,3.1],platform:[260,2.5]},data=actions[key];
- if(!electionWindow()){toast("La campaña electoral no está abierta.");return}
- if(!state.campaignVice){toast("Completá primero la fórmula presidencial.");return}
- if(!data||state.electionActions.includes(key))return;
+ if(state.electionPhase!=="general_campaign"||!data||state.electionActions.includes(key))return;
  if(!spend(data[0],"campaña electoral"))return;
  let bonus=data[1];if(key==="debate"&&state.education>=60)bonus+=.8;if(key==="pact"&&state.stability<40)bonus-=1;if(key==="platform"&&state.inflation>15)bonus-=.8;
  state.electionScore=clamp(state.electionScore+bonus,-10,20);state.electionActions.push(key);
- log("Campaña electoral",({tour:"Recorrida federal",debate:"Debate presidencial",pact:"Acuerdo de gobernadores",platform:"Presentación de plataforma"})[key]+" · inversión "+fmt(data[0])+".");
+ log("Campaña general",({tour:"Recorrida federal",debate:"Debate presidencial",pact:"Acuerdo de gobernadores",platform:"Presentación de plataforma"})[key]+" · inversión "+fmt(data[0])+".");
  persist();render();toast("Acción de campaña realizada.");
+}
+function runPasoAction(key){
+ const actions={tour:[220,2.7],debate:[140,2.2],rally:[190,2.5],endorsement:[280,3]},data=actions[key];
+ if(state.electionPhase!=="primary_campaign"||!data||state.pasoActions.includes(key))return;
+ if(!spend(data[0],"interna partidaria"))return;
+ let bonus=data[1];if(key==="debate"&&state.education>=60)bonus+=.5;if(key==="endorsement"&&state.stability<40)bonus-=.7;
+ state.pasoScore=clamp(state.pasoScore+bonus,0,15);state.pasoActions.push(key);
+ log("Campaña de las PASO",({tour:"Recorrida partidaria",debate:"Debate interno",rally:"Acto partidario",endorsement:"Acuerdo con dirigentes"})[key]+" · "+fmt(data[0])+".");
+ persist();render();toast("Acción de la interna realizada.");
+}
+function conductPaso(){
+ if(state.lastPaso&&state.lastPaso.year===state.nextPasoYear&&!state.lastPaso.finished)return;
+ const candidates=(state.primaryCandidates?.length?state.primaryCandidates:buildPrimaryCandidates(state.party,state.campaignCandidate)).map(c=>({...c,votes:0,share:0}));
+ state.lastPaso={year:state.nextPasoYear,counted:0,totalVotes:0,candidates,finished:false};
+ state.electionPhase="primary_voting";
+ log("Apertura de las PASO","Comenzó la interna abierta de "+state.party+". La ciudadanía definirá quién representará al espacio en las elecciones generales.");
+ persist();
+}
+function primaryCandidateWeights(last){
+ return last.candidates.map(c=>c.player?Math.max(12,34+(state.approval-50)*.32+(state.stability-50)*.12+(state.pasoScore||0)*3.8):Math.max(10,32+(c.name.length%5)*1.4));
+}
+function finalizePaso(){
+ const last=state.lastPaso;if(!last||last.finished||last.counted<100)return;
+ last.candidates.forEach(c=>c.share=last.totalVotes?Math.round(c.votes/last.totalVotes*1000)/10:0);
+ const winner=[...last.candidates].sort((a,b)=>b.votes-a.votes)[0];
+ state.pasoCandidate=winner.name;state.campaignCandidate=winner.name;state.pasoQualified=!!winner.player;state.campaignVice="";state.pasoViceCandidate="";
+ last.winner=winner.name;last.won=!!winner.player;last.finished=true;state.pasoDoneYear=last.year;
+ state.electionPhase="vice_selection";state.pasoScore=0;state.pasoActions=[];
+ log("Resultado de las PASO",winner.name+" ganó la interna de "+state.party+" con "+winner.share.toFixed(1)+"%. "+(winner.player?"Tu personaje será la cara presidencial del espacio.":"Tu precandidatura perdió; la fuerza eligió a "+winner.name+"."));
+ persist();toast(winner.player?"¡Ganaste las PASO! Ahora elegí vicepresidente.":"La interna eligió a otra persona. Podés continuar la campaña del partido.");
 }
 function conductPaso(){return}
 function conductPaso(){
