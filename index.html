@@ -457,7 +457,7 @@ function finalizeElection(){
  last.candidates.forEach(c=>c.share=last.totalVotes?Math.round(c.votes/last.totalVotes*1000)/10:0);
  const ordered=[...last.candidates].sort((x,y)=>y.votes-x.votes),winner=ordered[0];
  if(last.round===1){
-  const margin=winner.share-(ordered[1]?.share||0),qualifies=winner.share>=45||(winner.share>=40&&margin>10);
+  const margin=winner.share-(ordered[1]?.share||0),qualifies=winner.share>45||(winner.share>=40&&margin>10);
   if(!qualifies){last.needsRunoff=true;last.firstRound=last.candidates.map(c=>({name:c.name,party:c.party,share:c.share,votes:c.votes}));log("Segunda vuelta electoral","Ninguna fórmula alcanzó los requisitos para ganar en primera vuelta. Las dos más votadas competirán en el balotaje.");persist();return}
  }
  last.winner=winner.name;last.winnerParty=winner.party;last.vice=winner.vice;last.vote=winner.share;last.won=!!winner.player;last.tally=last.candidates.map(c=>({name:c.name,party:c.party,share:c.share}));last.finished=true;last.needsRunoff=false;
