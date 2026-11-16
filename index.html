@@ -300,10 +300,10 @@ function conductPaso(){
  const alternatives=[{name:"Lucía Fernández",vice:"Rafael Soria"},{name:"Diego Mansilla",vice:"Marta Quiroga"}],rival=alternatives[Math.floor(Math.random()*alternatives.length)];
  if(!won){state.pasoCandidate=rival.name}else{state.pasoCandidate=current}state.pasoViceCandidate="";state.campaignVice="";
  state.lastPaso={year:state.nextElectionYear,winner:state.pasoCandidate,vice:"Fórmula pendiente",won,share:Math.round(share*10)/10};state.pasoDoneYear=state.nextElectionYear;state.pasoScore=0;state.pasoActions=[];
- log("Resultado de las PASO",state.pasoCandidate+" y "+state.pasoViceCandidate+" ganaron la interna de "+state.party+". La elección general todavía debe definir quién asume la presidencia.");
+ log("Resultado de las PASO",state.pasoCandidate+" ganó la interna de "+state.party+". Ahora corresponde elegir la vicepresidencia y completar la fórmula presidencial.");
 }
 function conductElection(){
- if(state.lastElection&&state.lastElection.counted<100)return;
+ if(state.lastElection&&Array.isArray(state.lastElection.candidates)&&!state.lastElection.finished&&state.lastElection.counted<100)return;
  const forced=state.inaugurated&&state.consecutiveTerms>=2;
  const opposition=[{name:"Valentina Ríos",vice:"Tomás Aguirre",party:"Alianza Federal",ideology:"developmentalism"},{name:"Martín Aguirre",vice:"Paula Méndez",party:"Frente Republicano",ideology:"liberalism"},{name:"Camila Benítez",vice:"Julián Sosa",party:"Unión Popular",ideology:"socialdemocracy"},{name:"Santiago Ferreyra",vice:"Clara Ibáñez",party:"Coalición Nacional",ideology:"conservatism"}];
  const ticket={name:state.pasoCandidate||state.president||state.campaignCandidate,vice:state.pasoViceCandidate||"Vicepresidencia pendiente",party:state.party,ideology:state.ideology,player:true};
@@ -313,7 +313,7 @@ function conductElection(){
  log("Apertura de elecciones nacionales","Comenzó el escrutinio simulado. Los resultados se conocerán progresivamente; todavía no hay ganador.");
 }
 function electionCandidateWeights(last){
- return last.candidates.map((c,i)=>i===0?Math.max(8,25+(state.approval-50)*.55+(state.stability-50)*.18+(state.employment-50)*.16-(state.poverty-30)*.16-(state.inflation-5)*.22+state.electionScore*1.8):Math.max(7,19+(c.ideology===state.ideology?2.5:0)+(i===1?(50-state.approval)*.12:0)+(i===2?(state.poverty-30)*.08:0)+(i===3?(state.inflation-5)*.06:0)));
+ return last.candidates.map((c,i)=>i===0?Math.max(10,34+(state.approval-50)*.55+(state.stability-50)*.18+(state.employment-50)*.16-(state.poverty-30)*.16-(state.inflation-5)*.22+state.electionScore*2.6):Math.max(8,15+(c.ideology===state.ideology?2.5:0)+(i===1?(50-state.approval)*.12:0)+(i===2?(state.poverty-30)*.08:0)+(i===3?(state.inflation-5)*.06:0)));
 }
 function finalizeElection(){
  const last=state.lastElection;if(!last||last.finished||last.counted<100)return;
