@@ -567,7 +567,7 @@ road:{cost:1800,name:"Plan vial federal",run(){state.roads=clamp(state.roads+9);
 energy:{cost:2200,name:"Ampliación energética",run(){state.energy=clamp(state.energy+11);state.industry=clamp(state.industry+3)}},
 factory:{cost:2600,name:"Parque industrial",run(){state.industry=clamp(state.industry+10);state.employment=clamp(state.employment+2);state.investment=clamp(state.investment+3)}},
 school:{cost:1200,name:"Plan educativo",run(){state.education=clamp(state.education+7);state.tech=clamp(state.tech+2)}},
-training:{cost:950,name:"Capacitación laboral",run(){state.training=clamp(state.training+10);state.employment=clamp(state.employment+1);state.approval=clamp(state.approval+.5)}},
+training:{cost:950,name:"Capacitación laboral",run(){state.training=clamp(state.training+10)}},
 health:{cost:1500,name:"Equipamiento sanitario",run(){state.health=clamp(state.health+8);state.approval=clamp(state.approval+2)}},
 jobs:{cost:900,name:"Programa de empleo",run(){state.employment=clamp(state.employment+5);state.poverty=clamp(state.poverty-2);state.approval=clamp(state.approval+2)}},
 agri:{cost:1100,name:"Modernización agropecuaria",run(){state.agriculture=clamp(state.agriculture+9);state.foodSupply=clamp(state.foodSupply+3)}},
