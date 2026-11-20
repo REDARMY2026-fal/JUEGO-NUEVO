@@ -672,7 +672,7 @@ function render(){
   renderFinance();
  }else if(activeView==="industry"){
   $("industryBars").innerHTML=bar("Agroindustria",state.agriculture)+bar("Manufactura",state.industry)+bar("Tecnología",state.tech)+bar("Energía",state.energy)+bar("Infraestructura vial",state.roads)+bar("Mantenimiento",state.maintenance);
-  $("industryActions").innerHTML=renderActions(["factory","agri","ports","energy","school","maintenance"]);
+  $("industryActions").innerHTML=renderActions(["factory","agri","ports","energy","road","school","maintenance"]);
   renderPrivateCompanies();
  }else if(activeView==="provinces"){
   renderProvinces();
