@@ -48,7 +48,8 @@
 - [ ] **Step 3: Reset PASO actions** — clear pasoActions after quarter transition only if the resulting phase is primary_campaign.
 - [ ] **Step 4: Reset general actions** — clear electionActions after quarter transition only if the resulting phase is general_campaign.
 - [ ] **Step 5: Display the allowance** — show used/available actions and explain renewal at quarter close in both campaign phases.
-- [ ] **Step 6: Run syntax and browser verification** — verify reset, action costs, score changes, phase transitions, and save/reload.
+- [ ] **Step 6: Scale score caps and candidate weights together** — preserve maximum electoral influence while allowing quarterly actions to keep adding value: PASO cap 36/weight 1.35; general cap 40/weight 1.3; runoff weight 0.6.
+- [ ] **Step 7: Run syntax and browser verification** — verify reset, action costs, score changes, phase transitions, and save/reload.
 
 ### Task 3: Verify edge cases
 
