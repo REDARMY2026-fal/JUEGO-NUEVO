@@ -482,7 +482,7 @@ function conductElection(){
  if(state.electionPhase!=="general_campaign"||!state.campaignVice||state.lastElection&&!state.lastElection.finished)return;
  const forced=state.inaugurated&&state.consecutiveTerms>=2;
  const opposition=[{name:"Valentina Ríos",vice:"Tomás Aguirre",party:"Alianza Federal",ideology:"developmentalism"},{name:"Martín Aguirre",vice:"Paula Méndez",party:"Frente Republicano",ideology:"liberalism"},{name:"Camila Benítez",vice:"Julián Sosa",party:"Unión Popular",ideology:"socialdemocracy"},{name:"Santiago Ferreyra",vice:"Clara Ibáñez",party:"Coalición Nacional",ideology:"conservatism"}];
- const ticket={name:state.campaignCandidate,vice:state.campaignVice,party:state.party,ideology:state.ideology,player:!!state.pasoQualified};
+ const ticket={name:state.campaignCandidate,vice:state.campaignVice,party:state.party,ideology:state.ideology,player:!!state.pasoQualified||forced};
  const candidates=[ticket,...opposition];
  state.lastElection={year:state.nextElectionYear,previousPresident:state.president||"",previousParty:state.party,forced,round:1,campaignScore:state.electionScore,counted:0,totalVotes:0,districts:["Buenos Aires","CABA","Catamarca","Chaco","Chubut","Córdoba","Corrientes","Entre Ríos","Formosa","Jujuy","La Pampa","La Rioja","Mendoza","Misiones","Neuquén","Río Negro","Salta","San Juan","San Luis","Santa Cruz","Santa Fe","Santiago del Estero","Tierra del Fuego","Tucumán"].map(name=>({name,votes:candidates.map(()=>0)})),candidates:candidates.map(c=>({...c,votes:0,share:0})),finished:false,needsRunoff:false};
  state.electionPhase="general_voting";
