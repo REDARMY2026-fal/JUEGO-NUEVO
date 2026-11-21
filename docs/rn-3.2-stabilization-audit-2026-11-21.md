@@ -46,6 +46,24 @@ Perder las PASO no elimina el partido ni impide que ese partido compita en las g
 - Se aclaró que el bloque mayoritario del Congreso no equivale necesariamente al partido del presidente.
 - Se actualizaron los textos de Gobierno y el encabezado para distinguir campaña, oposición, gobierno del partido y presidencia.
 
+### Corrección de regla electoral solicitada por el usuario (21-11-2026)
+
+La regla institucional queda fijada sin excepciones para la candidatura presidencial del jugador:
+
+- **Ganar las PASO es obligatorio.** Solo la candidatura ganadora puede seleccionar vicepresidente y avanzar a la campaña general.
+- Si el jugador pierde las PASO, su candidatura termina en el estado `paso_lost`. No se abre la selección de vicepresidente ni la campaña general. Puede volver al inicio y crear una nueva campaña.
+- Perder las elecciones generales sí es un resultado válido: el jugador pasa a la oposición.
+- La regla se valida en tres lugares: resultado del escrutinio PASO, confirmación de la fórmula y creación de las elecciones generales.
+- Se retiró el bypass que permitía marcar una fórmula como candidatura del jugador por la condición de límite de mandatos. La candidatura sucesora también debe ganar las PASO.
+- Las partidas guardadas que registran una derrota PASO pero quedaron en fases posteriores se migran a `paso_lost`, sin conservar una vicepresidencia inválida.
+
+Pruebas de lógica tras la corrección:
+- Victoria PASO: `vice_selection`, `pasoQualified=true`.
+- Derrota PASO: `paso_lost`, `pasoQualified=false`, sin vicepresidente ni acceso a generales.
+- Guardado antiguo con derrota PASO y fase general: se migra a `paso_lost`.
+- Pantalla de derrota: muestra el fin de candidatura y botón para volver al inicio; no muestra selector de vicepresidente.
+- JavaScript vuelve a compilar sin errores.
+
 ## Pruebas realizadas
 
 ### Código y estructura
