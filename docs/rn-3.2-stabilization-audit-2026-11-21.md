@@ -12,13 +12,13 @@
 RN conserva su identidad y no copia la interfaz ni el código de QQG. Se adopta la secuencia institucional que definimos:
 
 1. El jugador crea o selecciona un personaje y un partido.
-2. La interna partidaria (PASO) determina quién encabeza la fórmula.
+2. La PASO partidaria determina quién encabeza la fórmula; por regla de diseño, la candidatura controlada por el jugador siempre obtiene la nominación.
 3. La vicepresidencia se elige entre dirigentes del mismo partido.
 4. Se desarrolla la campaña general.
 5. Se realiza el escrutinio nacional y, cuando corresponde, el balotaje.
 6. Solo el jugador cuya candidatura presidencial gana puede asumir el Poder Ejecutivo.
 
-Perder las PASO no elimina el partido ni impide que ese partido compita en las generales. Si gana una fórmula del partido pero el personaje del jugador no encabezó la candidatura, el juego lo identifica como gobierno del partido, no como presidencia del jugador.
+La PASO no puede eliminar la candidatura del jugador: el escrutinio mantiene las diferencias de apoyo entre precandidaturas, pero garantiza que la candidatura controlada por el jugador sea proclamada ganadora. La derrota en las elecciones generales sigue siendo posible.
 
 ## Correcciones realizadas
 
@@ -46,23 +46,25 @@ Perder las PASO no elimina el partido ni impide que ese partido compita en las g
 - Se aclaró que el bloque mayoritario del Congreso no equivale necesariamente al partido del presidente.
 - Se actualizaron los textos de Gobierno y el encabezado para distinguir campaña, oposición, gobierno del partido y presidencia.
 
-### Corrección de regla electoral solicitada por el usuario (21-11-2026)
+### Regla electoral solicitada por el usuario (21-11-2026)
 
-La regla institucional queda fijada sin excepciones para la candidatura presidencial del jugador:
+La regla queda fijada así:
 
-- **Ganar las PASO es obligatorio.** Solo la candidatura ganadora puede seleccionar vicepresidente y avanzar a la campaña general.
-- Si el jugador pierde las PASO, su candidatura termina en el estado `paso_lost`. No se abre la selección de vicepresidente ni la campaña general. Puede volver al inicio y crear una nueva campaña.
-- Perder las elecciones generales sí es un resultado válido: el jugador pasa a la oposición.
-- La regla se valida en tres lugares: resultado del escrutinio PASO, confirmación de la fórmula y creación de las elecciones generales.
-- Se retiró el bypass que permitía marcar una fórmula como candidatura del jugador por la condición de límite de mandatos. La candidatura sucesora también debe ganar las PASO.
-- Las partidas guardadas que registran una derrota PASO pero quedaron en fases posteriores se migran a `paso_lost`, sin conservar una vicepresidencia inválida.
+- **El jugador siempre gana las PASO.** La competencia interna conserva precandidatos rivales, votos y variación territorial, pero al cerrar el escrutinio se transfieren los votos estrictamente necesarios desde las candidaturas rivales para que la candidatura controlada por el jugador obtenga la primera posición.
+- El ajuste se aplica también al detalle de votos por distrito, preservando los totales territoriales y nacionales.
+- Al proclamarse ganador, el jugador pasa a `vice_selection` y elige vicepresidente dentro de su partido.
+- La candidatura solo puede avanzar a generales después de confirmar esa fórmula.
+- **Las elecciones generales sí se pueden perder.** En ese caso el jugador pasa a la oposición.
+- La regla se aplica también a la candidatura sucesora en los ciclos con límite de mandatos.
 
-Pruebas de lógica tras la corrección:
-- Victoria PASO: `vice_selection`, `pasoQualified=true`.
-- Derrota PASO: `paso_lost`, `pasoQualified=false`, sin vicepresidente ni acceso a generales.
-- Guardado antiguo con derrota PASO y fase general: se migra a `paso_lost`.
-- Pantalla de derrota: muestra el fin de candidatura y botón para volver al inicio; no muestra selector de vicepresidente.
-- JavaScript vuelve a compilar sin errores.
+La pantalla de campaña se actualizó para no afirmar que la PASO se puede perder. La pantalla `paso_lost` se conserva como protección para partidas antiguas o estados corruptos, pero no debe alcanzarse mediante un escrutinio normal.
+
+Pruebas de lógica requeridas tras esta modificación:
+- Varios escrutinios simulados con el jugador inicialmente último, segundo o primero.
+- Victoria garantizada del candidato marcado como controlado por el jugador.
+- Suma de votos por candidato igual a la suma de votos distritales.
+- Totales de votos por distrito y total nacional preservados tras el ajuste.
+- Confirmación de que la fase posterior es `vice_selection` y que las generales siguen sujetas a resultado.
 
 ## Pruebas realizadas
 
