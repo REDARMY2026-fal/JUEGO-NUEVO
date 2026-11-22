@@ -294,12 +294,13 @@ button,select,input,textarea{max-width:100%}
 }
 
  .paso-controls{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.paso-candidate-bar{height:6px;margin:-4px 0 7px;background:#303640}.paso-candidate-bar span{background:#8739c5;transition:width .3s ease}.paso-controls .btn{min-height:38px}.scrutiny-row>strong{display:flex;flex-direction:column;align-items:flex-end}.scrutiny-row>strong small{font-size:9px;color:var(--muted);font-weight:400}@media(max-width:650px){.paso-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.paso-controls .btn{padding:8px 5px;font-size:10px;min-width:0}.scrutiny-row{padding:8px}}
+.brand-logo{width:42px;height:42px;object-fit:contain;flex:none;border-radius:8px}.brand-copy{min-width:0}.lobby-mark{width:54px;height:54px;object-fit:cover;border-radius:12px;border:1px solid #d9b66c55;box-shadow:0 5px 20px #0008}.lobby-rail{align-items:center}.lobby-hero:before{content:"";display:block;width:min(100%,560px);aspect-ratio:5/3;background:url("assets/rn-logo.svg") center/contain no-repeat;margin:0 auto 8px}.flag.hidden{display:none!important}@media(max-width:650px){.brand-logo{width:34px;height:34px}.lobby-mark{width:46px;height:46px}.lobby-hero:before{width:min(100%,420px)}}
 </style>
 </head>
 <body>
 <div class="lobby" id="lobby">
  <div class="lobby-shell">
-  <aside class="lobby-rail"><div class="lobby-mark">RN</div><small>SIMULADOR POLÍTICO · ARGENTINA</small></aside>
+  <aside class="lobby-rail"><img class="lobby-mark" src="assets/rn-icon.svg" alt="Logo de Reconstrucción Nacional"><small>SIMULADOR POLÍTICO · ARGENTINA</small></aside>
   <main class="lobby-main">
    <div class="lobby-top"><span>RECONSTRUCCIÓN NACIONAL <span style="color:#d9b66c">/ ARGENTINA</span></span><span>SIMULACIÓN POLÍTICA · CAMPAÑA PRESIDENCIAL</span></div><div class="career-steps"><div class="career-step active"><b>01</b><span>Elegí tu espacio</span></div><div class="career-step"><b>02</b><span>Definí la fórmula</span></div><div class="career-step"><b>03</b><span>Competí en las PASO</span></div><div class="career-step"><b>04</b><span>Goberná el país</span></div></div>
    <section class="lobby-hero"><div class="eyebrow">REPÚBLICA ARGENTINA</div><h1>RECONSTRUÍ<br>EL FUTURO.</h1><p>Conducí el país, administrá sus recursos y negociá el rumbo de la nación. Cada decisión tiene un costo y cada trimestre deja consecuencias.</p></section>
@@ -311,7 +312,7 @@ button,select,input,textarea{max-width:100%}
  </div>
 </div>
 <div class="app hidden" id="app">
-<header class="top"><div class="brand"><div class="flag" id="headerPartyLogo">★</div><div><h1>RECONSTRUCCIÓN NACIONAL</h1><small>SIMULADOR DE GESTIÓN · ARGENTINA · V3.2</small></div></div><div class="top-actions"><span class="date" id="date"></span><button class="btn" id="lobbyBtn" type="button">⌂ Lobby</button><button class="btn" id="saveBtn" type="button">Guardar</button><button class="btn" id="exportBtn" type="button">Exportar</button><button class="btn danger" id="resetBtn" type="button">Nueva partida</button></div></header>
+<header class="top"><div class="brand"><img class="brand-logo" src="assets/rn-icon.svg" alt="RN"><div class="brand-copy"><h1>RECONSTRUCCIÓN NACIONAL</h1><small>SIMULADOR DE GESTIÓN · ARGENTINA · V3.2</small></div><div class="flag hidden" id="headerPartyLogo" aria-hidden="true">★</div></div><div class="top-actions"><span class="date" id="date"></span><button class="btn" id="lobbyBtn" type="button">⌂ Lobby</button><button class="btn" id="saveBtn" type="button">Guardar</button><button class="btn" id="exportBtn" type="button">Exportar</button><button class="btn danger" id="resetBtn" type="button">Nueva partida</button></div></header>
 <section class="metrics" id="metrics"></section>
 <div class="layout">
 <aside class="sidebar"><div class="nav-label">ADMINISTRACIÓN NACIONAL</div><nav class="nav" id="nav">
