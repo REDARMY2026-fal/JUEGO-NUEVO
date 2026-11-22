@@ -1,67 +1,75 @@
-# Auditoría de Sociedad — RN 3.2
-Fecha: 2026-11-21
+# Auditoría funcional y pruebas ampliadas — RN 3.2
+Fecha: 2026-11-22
 Rama: `fix/rn-3.2-stabilization-2026-11-21`
-Entorno: vista previa Vercel aislada + inspección de `index.html`
-Estado: auditoría funcional parcial; no se modificó la lógica social.
+Entorno: despliegues de vista previa Vercel y sesiones aisladas de Firecrawl.
+Estado: pruebas ampliadas; corrección del calendario electoral incluida. No se publicó en producción ni se modificó `main`.
 
-## 1. Indicadores presentes
-La vista Sociedad expone indicadores de mercado laboral, sistema sanitario, educación, pobreza, vivienda y abastecimiento. Se verificó la navegación a Sociedad y la renderización de:
-- Demanda laboral, empleo, desempleo, empleo formal, capacitación y poder adquisitivo salarial.
-- Resultado sanitario, cobertura, capacidad hospitalaria, atención primaria y personal sanitario.
-- Educación, pobreza, vivienda y abastecimiento.
+## 1. Corrección aplicada: elección general omitida por retraso de PASO
+Se reprodujo el siguiente caso:
+- Una partida alcanza Año 4 / T1 y sigue en interna/PASO.
+- La PASO se termina manualmente después del año general inicialmente previsto.
+- La fórmula se confirma cuando `nextElectionYear` ya quedó atrás.
+- Antes de la corrección, `closeQuarter()` solo ejecutaba `conductElection()` cuando `state.year === state.nextElectionYear`; por eso la elección podía quedar omitida indefinidamente.
 
-La vista completa se pudo abrir en la campaña de prueba y tras la asunción presidencial.
+Corrección en `index.html`: al confirmar la fórmula, si `nextElectionYear <= year`, el juego reprograma la elección general para el próximo año y registra el motivo en el historial. No modifica la regla de PASO garantizada ni fuerza un resultado en las generales.
 
-## 2. Políticas públicas y efectos directos
-Las doce acciones del módulo están presentes en `actions` y sus botones se habilitan cuando el jugador asume la Presidencia. Antes de la asunción aparecen bloqueadas por el control de autoridad ejecutiva.
+Commit: `9b9c1470571d78588541e2d2d5451ac51b6545e4`.
 
-| Política | Costo base (M) | Efecto directo |
-|---|---:|---|
-| Plan educativo | 1.200 | Educación +5; tecnología +1,5 |
-| Becas y permanencia educativa | 850 | Educación +2; capacitación +4 |
-| Capacitación laboral | 950 | Capacitación +10 |
-| Inserción laboral | 900 | Demanda laboral +5; capacitación +2; aprobación +0,5 |
-| Incentivo al empleo formal | 500 | Formalidad +1,2; desempleo -0,2; inversión +0,5 |
-| Plan de vivienda | 1.900 | Vivienda +8; empleo +0,7 |
-| Equipamiento hospitalario | 1.500 | Capacidad hospitalaria +7 |
-| Ampliación de cobertura sanitaria | 1.250 | Cobertura sanitaria +7 |
-| Formación y contratación sanitaria | 1.150 | Personal sanitario +7; capacitación +1 |
-| Atención primaria y prevención | 1.050 | Atención primaria +7; agua +1 |
-| Agua y saneamiento | 1.000 | Agua +6; salud +1,5 |
-| Abastecimiento básico | 750 | Abastecimiento +5; aprobación +0,5 |
+## 2. Validación de la corrección en navegador
+En el despliegue actualizado:
+- Partida de prueba llegó a Año 4 / T1 con fase `primary_voting`, `nextPasoYear=2`, `nextElectionYear=3`.
+- Se finalizó el escrutinio PASO; la candidatura del jugador avanzó y pudo elegir vicepresidente de su partido.
+- Al confirmar fórmula, el estado quedó en `general_campaign` y la elección se reprogramó a Año 5.
+- Tras cuatro cierres trimestrales, Año 5 / T1 activó `general_voting` y creó el escrutinio general.
+- El escrutinio de primera vuelta llegó al 100% y abrió balotaje cuando ninguna fórmula cumplió los umbrales.
+- El balotaje llegó al 100%; en esta ejecución el jugador ganó 51,1% contra 48,9% y el estado final fue `government`, con `inaugurated=true`.
 
-Los costos efectivos se ajustan por inflación mediante `investmentCost()`; por tanto, el importe final puede superar el costo base.
+La ruta de derrota se verificó con una prueba unitaria aislada de `finalizeElection()`: una fórmula rival ganadora produjo `electionPhase="opposition"`, `inaugurated=false`, `president` rival y `governmentParty` rival. No se modificó el resultado para forzarlo en el navegador.
 
-## 3. Consecuencias trimestrales
-El cierre trimestral actualiza gradualmente cobertura sanitaria, capacidad hospitalaria, atención primaria, personal sanitario, salud, educación, vivienda, demanda laboral, empleo, pobreza, desempleo y formalidad. La pobreza también responde al empleo, abastecimiento, formalidad, desempleo, salario real y vivienda. No son cambios instantáneos: se acumulan por trimestre.
+## 3. Simulación macroeconómica prolongada
+En una sesión aislada se cerraron 12 trimestres consecutivos, desde Año 1 / T2 hasta Año 4 / T2, sin valores no finitos ni indicadores fuera de rango (0–100) en las variables monitorizadas.
 
-## 4. Gastos recurrentes
-La función `expenses()` incorpora mantenimiento trimestral:
-- Salud: capacidad hospitalaria, personal sanitario, atención primaria y cobertura.
-- Servicios sociales: educación, capacitación y vivienda.
-- Agua: se incluye en el mantenimiento de infraestructura.
-Esto evita que ampliar servicios sea una mejora gratuita y permanente. El gasto recurrente aumenta cuando los indicadores superan sus umbrales de referencia.
+Tendencias observadas en esa partida:
+- Tesoro: $18.062,4 M → $13.935,7 M.
+- Deuda: se mantuvo en $6.200 M durante la ventana.
+- Inflación trimestral observada: osciló aproximadamente entre 4,94% y 5,57%.
+- Estabilidad: 61,14 → 61,55.
+- Pobreza: 33,67 → 32,12, con pequeñas variaciones.
+- Desempleo: 8,37 → 8,22.
+- Educación: 56,92 → 56,08.
+- Salud: 63,02 → 63,30.
 
-## 5. Pruebas de navegador realizadas
-- La vista Sociedad y las secciones Situación nacional, Economía, Finanzas y deuda, Producción, Provincias, Gobierno, Elecciones e Historial se abrieron correctamente.
-- En una campaña aislada, el cierre de un trimestre pasó de Año 1 / T1 a Año 1 / T2 y actualizó tesoro, deuda, indicadores sociales e historial.
-- Guardado local: se encontró `rn_save_v1`; tras recargar, el lobby informó la partida guardada en Año 1 / T2.
-- Se probó Plan educativo: costo efectivo 1.355 M; educación +5 y tecnología +1,5.
-- Se probaron Incentivo al empleo formal, Cobertura sanitaria, Plan de vivienda y Abastecimiento básico; los costos se descontaron y los indicadores directos cambiaron conforme a la definición.
-- Se cerró otro trimestre tras esas políticas; se observaron nuevas variaciones sociales y el avance de la historia macroeconómica.
-- En una partida de prueba se completó la interna/PASO: la candidatura del jugador ganó por 2 votos de diferencia, quedó habilitada la selección de vicepresidente dentro del partido y pasó a campaña general.
-- Se completó el escrutinio general y el balotaje: la fórmula del jugador ganó 51,1% contra 48,9%. Esto valida una victoria, no una derrota.
-- Vista previa móvil a 390 px: el ancho del documento no superó el viewport en el lobby (sin desbordamiento horizontal).
+Interpretación: la simulación no produjo inestabilidad numérica, pero el tesoro descendió sostenidamente. Esta ejecución no demuestra que el modelo esté equilibrado a largo plazo ni que los indicadores representen correctamente la economía real.
 
-## 6. Guardado y preservación
-El guardado principal usa `localStorage` con clave `rn_save_v1`; `readSave()` combina el objeto guardado con `defaults()` y normaliza valores numéricos. Las pruebas se hicieron en sesiones aisladas, sin modificar ni importar partidas personales. No se realizó una migración destructiva ni se borró ningún guardado del usuario.
+## 4. Interfaz móvil
+En viewport de 390 × 844 px se recorrieron las nueve secciones:
+- Situación nacional
+- Economía
+- Finanzas y deuda
+- Producción
+- Provincias
+- Sociedad
+- Gobierno
+- Elecciones
+- Historial
 
-## 7. Pendientes / límites de esta auditoría
-1. Falta completar una derrota real en elecciones generales desde navegador y verificar visualmente el estado Oposición y el bloqueo de facultades ejecutivas.
-2. Falta probar varios años de gobierno con una batería de políticas sociales, para medir estabilidad de costos, inflación y deuda a largo plazo.
-3. Falta validar importación/restauración de una copia exportada en un navegador limpio.
-4. El test móvil cubrió el lobby a 390 px; no equivale a una auditoría responsive completa de todas las vistas.
-5. No se modificó el código social porque las acciones y efectos revisados funcionaron en las pruebas efectuadas. Cualquier balance numérico debe hacerse con simulaciones prolongadas, no con un solo trimestre.
+El ancho del documento y del body permaneció en 390 px en las vistas comprobadas; no se detectó desbordamiento horizontal en esa prueba.
 
-## 8. Resultado
-**Sociedad: funcionamiento básico verificado, balance a largo plazo pendiente.** No se detectó un fallo funcional inmediato en las políticas probadas. La economía conserva costos recurrentes para servicios sociales y sanitarios. Esta auditoría no certifica todavía la estabilidad integral de RN 3.2 ni autoriza publicar en `main`.
+## 5. Gobierno y guardado
+- Tras una victoria electoral se verificó `inaugurated=true` y acceso a la vista Gobierno.
+- La renovación de un ministro descontó $120 M del tesoro y la acción quedó registrada en el historial.
+- Se guardó y recargó la partida; se recuperaron año, trimestre, fase electoral, presidente, estado de asunción, tesoro e historial.
+- Pruebas realizadas en perfiles de navegador aislados; no se tocaron guardados personales.
+
+## 6. Módulo Sociedad
+La auditoría específica de Sociedad está en `docs/rn-3.2-society-audit-2026-11-21.md`. Las políticas probadas actualizaron los indicadores y descontaron costos; los servicios sociales y sanitarios tienen gastos recurrentes.
+
+## 7. Límites pendientes
+1. La derrota electoral fue verificada con prueba unitaria de la función finalizadora, no mediante una partida completa de navegador. Conviene una sesión E2E que consiga derrota de forma orgánica.
+2. La prueba macroeconómica abarcó 12 trimestres, no varios mandatos.
+3. No se completó una prueba de exportación y restauración del archivo de respaldo en un navegador limpio.
+4. El test móvil cubrió las nueve vistas a 390 px; faltan tablet, escritorio y pruebas de interacción exhaustivas.
+5. La presentación de Figma Slides requiere reparación visual. El conector Figma devolvió un límite de llamadas del plan Starter, así que no fue posible inspeccionar ni guardar los cambios restantes en esta sesión. No se declara reparada.
+
+## 8. Conclusión
+**RN 3.2: flujo positivo electoral, guardado, vistas principales y recorrido móvil parcialmente verificados; se corrigió un defecto real de calendario electoral.** No está listo para publicarse como versión definitiva. `main` y producción permanecen intactos.
