@@ -452,7 +452,7 @@ function electionActionsMarkup(){
   const used=Math.min(CAMPAIGN_ACTIONS_PER_QUARTER,state.pasoActions.length);
   const actionStatus='<div class="notice"><b>ACCIONES DEL TRIMESTRE</b><br>'+used+' de '+CAMPAIGN_ACTIONS_PER_QUARTER+' utilizadas · '+(CAMPAIGN_ACTIONS_PER_QUARTER-used)+' disponibles. Se renuevan al cerrar el trimestre; el costo sale del tesoro.</div>';
   const actions=[["tour","Recorrida por el partido",220,"Construí apoyo entre afiliados y referentes de tu espacio.",2.7],["debate","Debate interno",140,"Defendé tu programa frente a los otros precandidatos.",2.2],["rally","Acto partidario",190,"Movilizá militantes y estructuras territoriales.",2.5],["endorsement","Acuerdo con dirigentes",280,"Conseguí respaldos de intendentes, legisladores y gobernadores.",3]];
-  const termLimited=state.inaugurated&&state.consecutiveTerms>=2;return actionStatus+'<div class="notice"><b>ETAPA 1 · INTERNAS ABIERTAS</b><br>'+(termLimited?"El titular alcanzó el límite de dos mandatos consecutivos. Tu espacio presenta una nueva candidatura y el presidente saliente no puede volver a competir.":"Tu personaje todavía es precandidato/a. Primero debe ganar las PASO de "+escapeHTML(state.party)+" para convertirse en la cara presidencial del espacio.")+'</div><div class="decision"><h4>Precandidaturas de '+escapeHTML(state.party)+'</h4>'+state.primaryCandidates.map(c=>'<div class="scrutiny-row"><div><b>'+escapeHTML(c.name)+'</b><small>'+(c.player?(termLimited?"Candidatura de sucesión · Tu lista":"Tu precandidatura"):"Competidor/a interno/a")+'</small></div><strong>'+(c.player?"TU LISTA":"RIVAL")+'</strong></div>').join("")+'</div>'+actions.map(x=>'<div class="decision"><h4>'+x[1]+'</h4><p>'+x[3]+'</p><button class="btn" data-paso-action="'+x[0]+'" '+(state.pasoActions.includes(x[0])?'disabled':'')+'>'+(state.pasoActions.includes(x[0])?'Realizada':'Invertir · '+fmt(x[2]))+'</button></div>').join("")+'<div class="decision"><b>Respaldo interno acumulado: '+state.pasoScore.toFixed(1)+' pts</b><p>Las acciones fortalecen tu respaldo y los rivales conservan sus propios votos. La candidatura controlada por vos siempre obtiene la nominación y avanza a la elección general.</p></div>';
+  const termLimited=state.inaugurated&&state.consecutiveTerms>=2;return actionStatus+'<div class="notice"><b>ETAPA 1 · INTERNAS ABIERTAS</b><br>'+(termLimited?"El titular alcanzó el límite de dos mandatos consecutivos. Tu espacio presenta una nueva candidatura y el presidente saliente no puede volver a competir.":"Tu personaje todavía es precandidato/a. Primero debe ganar las PASO de "+escapeHTML(state.party)+" para convertirse en la cara presidencial del espacio.")+'</div><div class="decision"><h4>Precandidaturas de '+escapeHTML(state.party)+'</h4>'+state.primaryCandidates.map(c=>'<div class="scrutiny-row"><div><b>'+escapeHTML(c.name)+'</b><small>'+(c.player?(termLimited?"Candidatura de sucesión · Tu lista":"Tu precandidatura"):"Competidor/a interno/a")+'</small></div><strong>'+(c.player?"TU LISTA":"RIVAL")+'</strong></div>').join("")+'</div>'+actions.map(x=>'<div class="decision"><h4>'+x[1]+'</h4><p>'+x[3]+'</p><button class="btn" data-paso-action="'+x[0]+'" '+(state.pasoActions.includes(x[0])?'disabled':'')+'>'+(state.pasoActions.includes(x[0])?'Realizada':'Invertir · '+fmt(x[2]))+'</button></div>').join("")+'<div class="decision"><b>Respaldo interno acumulado: '+state.pasoScore.toFixed(1)+' pts</b><p>Las acciones fortalecen tu respaldo, pero no garantizan la nominación. El resultado depende de los votos obtenidos por cada precandidatura en todos los distritos.</p></div>';
  }
  if(phase==="primary_voting"){
   const last=state.lastPaso;return '<div class="notice"><b>ETAPA 2 · INTERNA PARTIDARIA · '+escapeHTML(state.party)+'</b><br>Se cuentan primero los distritos menos poblados; las grandes ciudades se incorporan después. El resultado sigue abierto hasta el 100%.</div><div class="scrutiny-panel"><div class="scrutiny-head"><b>Escrutinio '+(last?.counted||0)+'% · en vivo · PASO</b><span class="tag">SIMULACIÓN LOCAL</span></div><div class="scrutiny-stats"><strong>'+(last?.counted||0)+'%</strong><span>de mesas escrutadas · '+fmt(last?.totalVotes||0)+' votos computados</span></div><div class="scrutiny-track"><i style="width:'+(last?.counted||0)+'%"></i></div><div class="paso-controls">'+(last?.finished?'<span class="sub">Escrutinio definitivo</span>':(last?.paused?'<button class="btn primary" id="resumePaso">▶ Continuar</button>':(scrutinyTimer?'<button class="btn primary" id="pausePaso">Ⅱ Pausa</button>':'<button class="btn primary" id="startPasoScrutiny">▶ Iniciar / continuar</button>'))+'<button class="btn" id="speedPaso">×'+pasoScrutinySpeed+' Velocidad</button><button class="btn" id="finishPaso">⏭ Al final</button>')+'</div><p class="sub">Último distrito informado: <b>'+escapeHTML(last?.currentDistrict||"Aún no comenzó el recuento")+'</b></p><div class="scrutiny-results">'+(last?.candidates||[]).map(c=>'<div class="scrutiny-row"><div><b>'+escapeHTML(c.party||state.party)+'</b><small>'+escapeHTML(c.name)+(c.player?" · Tu precandidatura":" · Precandidato/a")+'</small></div><strong>'+(last.counted>=2?c.share.toFixed(1)+"%":"En recuento")+'<small>'+Number(c.votes||0).toLocaleString("es-AR")+' votos</small></strong></div><div class="bar paso-candidate-bar"><span style="width:'+(last.counted>=2?c.share:0)+'%"></span></div>').join("")+'</div><div class="sub">Precandidaturas: '+(last?.candidates?.length||0)+' · Distritos: '+(last?.districts?.length||24)+' · El resultado se proclama al llegar al 100%.</div></div>';
@@ -507,37 +507,48 @@ function pasoDistricts(){return provinces.map(p=>({name:p[0],population:p[2],vot
 function conductPaso(){if(state.lastPaso&&state.lastPaso.year===state.nextPasoYear&&!state.lastPaso.finished)return;const playerEligible=!(state.inaugurated&&state.consecutiveTerms>=2);const primaryLeader=state.inaugurated?(state.president||state.playerCandidate||state.campaignCandidate):(state.playerCandidate||state.campaignCandidate);const source=playerEligible&&state.primaryCandidates?.length?state.primaryCandidates:buildPrimaryCandidates(state.party,primaryLeader,playerEligible);const candidates=source.map(c=>({...c,votes:0,share:0}));state.lastPaso={year:state.nextPasoYear,counted:0,totalVotes:0,candidates,districts:pasoDistricts().map(d=>({...d,votes:candidates.map(()=>0),reported:false})),districtIndex:0,currentDistrict:"",finished:false,paused:false};state.electionPhase="primary_voting";log("Apertura de las PASO","Comenzó la interna partidaria de "+state.party+". Los precandidatos del mismo espacio compiten para definir quién encabezará la candidatura presidencial.");persist()}
 function primaryCandidateWeights(last){return last.candidates.map(c=>{let w=34*(c.base||1);if(c.player)w+=(state.approval-50)*.34+(state.stability-50)*.13+(state.employment-50)*.08-(state.inflation-5)*.12-(state.poverty-30)*.09+(state.pasoScore||0)*1.35;else w+=(c.endorsements||0)+(c.campaignMomentum||0);return Math.max(5,w)})}
 function finalizePaso(){
- const last=state.lastPaso;if(!last||last.finished||last.counted<100)return;
+ const last=state.lastPaso;
+ if(!last||last.finished||last.counted<100)return;
  if(!Array.isArray(last.candidates)||!last.candidates.length)return;
  let playerIndex=last.candidates.findIndex(c=>c.player);
- if(playerIndex<0){playerIndex=0;last.candidates[playerIndex].player=true;last.candidates[playerIndex].profile="Candidatura del espacio del jugador";}
- const districts=Array.isArray(last.districts)?last.districts:[];
- const rivals=last.candidates.map((c,i)=>({c,i})).filter(x=>x.i!==playerIndex).sort((a,b)=>(Number(b.c.votes)||0)-(Number(a.c.votes)||0));
- for(const rival of rivals){
-  const playerVotes=Number(last.candidates[playerIndex].votes)||0, rivalVotes=Number(rival.c.votes)||0;
-  if(rivalVotes<playerVotes)continue;
-  let transfer=Math.floor((rivalVotes-playerVotes)/2)+1,remaining=transfer;
-  for(const district of districts){
-   if(remaining<=0)break;
-   if(!Array.isArray(district.votes))continue;
-   const available=Math.max(0,Number(district.votes[rival.i])||0),moved=Math.min(remaining,available);
-   district.votes[rival.i]=available-moved;
-   district.votes[playerIndex]=(Number(district.votes[playerIndex])||0)+moved;
-   remaining-=moved;
-  }
-  if(remaining>0){last.candidates[rival.i].votes=Math.max(0,rivalVotes-remaining);last.candidates[playerIndex].votes=(Number(last.candidates[playerIndex].votes)||0)+remaining;}
+ if(playerIndex<0){
+  playerIndex=0;
+  last.candidates[playerIndex].player=true;
+  last.candidates[playerIndex].profile="Candidatura del espacio del jugador";
  }
+ const districts=Array.isArray(last.districts)?last.districts:[];
  if(districts.length&&districts.every(d=>Array.isArray(d.votes))){
   last.candidates.forEach((c,i)=>c.votes=districts.reduce((sum,d)=>sum+(Number(d.votes[i])||0),0));
   last.totalVotes=last.candidates.reduce((sum,c)=>sum+(Number(c.votes)||0),0);
  }
  last.candidates.forEach(c=>c.share=last.totalVotes?Math.round(c.votes/last.totalVotes*1000)/10:0);
  const winner=[...last.candidates].sort((a,b)=>b.votes-a.votes)[0];
- state.pasoCandidate=winner.name;state.pasoQualified=!!winner.player;state.campaignVice="";state.pasoViceCandidate="";
- last.winner=winner.name;last.won=!!winner.player;last.finished=true;state.pasoDoneYear=last.year;
- if(winner.player){state.campaignCandidate=winner.name;state.electionPhase="vice_selection";log("Resultado de las PASO",winner.name+" ganó la interna de "+state.party+" con "+winner.share.toFixed(1)+"%. Tu personaje será la cara presidencial del espacio.");persist();toast("¡Ganaste las PASO! Ahora elegí vicepresidente.");}
- else{state.campaignCandidate=state.playerCandidate||state.campaignCandidate;state.electionPhase="paso_lost";state.pasoQualified=false;state.electionScore=0;state.electionActions=[];log("Derrota en las PASO",winner.name+" ganó la interna de "+state.party+". Tu precandidatura quedó fuera de las elecciones generales; no podés continuar a la campaña presidencial.");persist();toast("No ganaste las PASO. Tu candidatura terminó y no pasarás a las generales.");}
- state.pasoScore=0;state.pasoActions=[];
+ state.pasoCandidate=winner.name;
+ state.pasoQualified=!!winner.player;
+ state.campaignVice="";
+ state.pasoViceCandidate="";
+ last.winner=winner.name;
+ last.won=!!winner.player;
+ last.finished=true;
+ state.pasoDoneYear=last.year;
+ if(winner.player){
+  state.campaignCandidate=winner.name;
+  state.electionPhase="vice_selection";
+  log("Resultado de las PASO",winner.name+" ganó la interna de "+state.party+" con "+winner.share.toFixed(1)+"%. Tu personaje será la cara presidencial del espacio.");
+  persist();
+  toast("¡Ganaste las PASO! Ahora elegí vicepresidente.");
+ }else{
+  state.campaignCandidate=state.playerCandidate||state.campaignCandidate;
+  state.electionPhase="paso_lost";
+  state.pasoQualified=false;
+  state.electionScore=0;
+  state.electionActions=[];
+  log("Derrota en las PASO",winner.name+" ganó la interna de "+state.party+" con "+winner.share.toFixed(1)+"%. Tu precandidatura quedó fuera de las elecciones generales; no podés continuar a la campaña presidencial.");
+  persist();
+  toast("No ganaste las PASO. Tu candidatura terminó y no pasarás a las generales.");
+ }
+ state.pasoScore=0;
+ state.pasoActions=[];
 }
 function conductElection(){
  if(state.electionPhase!=="general_campaign"||!state.campaignVice||!state.pasoQualified||state.lastPaso?.finished!==true||state.lastPaso?.won!==true||state.lastElection&&!state.lastElection.finished)return;
