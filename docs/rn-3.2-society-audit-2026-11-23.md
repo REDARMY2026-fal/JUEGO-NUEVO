@@ -4,7 +4,7 @@ Base: `fix/rn-3.2-stabilization-2026-11-21`
 Rama de auditoría: `audit/rn-3.2-society-2026-11-23`
 Respaldo previo: `backup/rn-3.2-before-society-audit-2026-11-23`
 Alcance: inspección estática de indicadores, pobreza, salud, educación, empleo, abastecimiento, políticas, presupuesto, persistencia y efectos macroeconómicos.
-Estado: auditoría de código en curso. No se modificó `index.html`, no se alteraron partidas y no se publicó en producción.
+Estado actualizado: correcciones de Sociedad aplicadas en `index.html` sobre la rama de auditoría; verificación dinámica de interfaz y PASO completada en campañas descartables. No se usaron ni sobrescribieron partidas guardadas del usuario. No se publicó en producción.
 
 ## 1. Base y alcance
 
@@ -26,7 +26,7 @@ La interfaz distingue el índice de empleo del desempleo y muestra la pobreza co
 
 ## 3. Hallazgos funcionales
 
-### S1 — Diferencia entre el costo recurrente real del código y la auditoría anterior
+### S1 — Diferencia entre el costo recurrente real del código y la auditoría anterior (resuelta)
 
 La fórmula vigente de `expenses()` agrega:
 - Salud: capacidad hospitalaria, personal sanitario, atención primaria y cobertura.
@@ -37,13 +37,13 @@ Con los valores iniciales de RN 3.2, el cálculo estático da:
 - Sociedad: 6,2 M por trimestre.
 - Total: 25,6 M por trimestre.
 
-El documento anterior de estabilización menciona aproximadamente 13,4 M. Ese valor no coincide con la fórmula y los valores iniciales actuales. Antes de cambiar coeficientes, hay que fijar una única convención y comprobar el costo en una partida nueva.
+El documento anterior de estabilización menciona aproximadamente 13,4 M. Ese valor no coincide con la fórmula y los valores iniciales actuales. Se verificó el cálculo con la función exacta y en navegador: salud 19,4 M; educación 5,6 M; vivienda 0,6 M; total 25,6 M por trimestre. El valor de 13,4 M de la auditoría anterior no corresponde a la fórmula y valores iniciales de esta versión.
 
-### S1 — Gasto social recurrente no indexado por inflación
+### S1 — Gasto social recurrente no indexado por inflación (resuelta en Sociedad)
 
 Los costos únicos de políticas usan `investmentCost()`, que aumenta con la inflación. En cambio, el gasto recurrente de `expenses()` usa coeficientes nominales fijos. El índice de precios puede crecer durante la partida, pero el costo real de sostener servicios sociales no se actualiza.
 
-Esto reduce progresivamente el peso real de la salud, educación y vivienda en partidas inflacionarias. Es un problema compartido con otras partidas del presupuesto (ingresos y gastos base también son nominales), por lo que no debe corregirse solo en Sociedad sin revisar el modelo fiscal completo.
+Se corrigió el componente social: `socialUpkeepBreakdown()` multiplica salud, educación, capacitación y vivienda por `priceIndex / 100` (con piso técnico de 0,01). El desglose se muestra en Sociedad. El resto del presupuesto conserva partidas nominales y debe revisarse como modelo fiscal integral; no se afirma que todo el presupuesto esté indexado.
 
 ### S2 — Políticas de empleo y abastecimiento son intervenciones de una sola vez
 
@@ -94,7 +94,7 @@ La lista de acciones sociales incluye plan educativo, becas, capacitación, inse
 
 No se debe cambiar la clave, borrar campos, reiniciar partidas ni introducir una migración destructiva. Cualquier cambio de guardado requiere fixtures de partidas antiguas, nuevas, parciales y corruptas.
 
-## 7. Pruebas pendientes antes de corregir
+## 7. Pruebas y pendientes
 
 1. Calcular y verificar el gasto recurrente inicial con la función exacta.
 2. Ejecutar cada acción social una vez y comprobar costo, efecto inmediato e historial.
@@ -120,4 +120,42 @@ El proyecto Supabase `reconstruccion-nacional` está activo, pero no tiene migra
 
 ## 10. Estado
 
-Auditoría estática documentada. No se modificó el código del juego ni se probaron todavía las acciones en navegador. No se declara la auditoría dinámica finalizada.
+Estado: correcciones y pruebas parciales completadas; auditoría integral todavía abierta. No se publicó ni se fusionó a `main`.
+
+
+## 11. Verificación dinámica añadida — 2026-11-23
+
+### Interfaz de Sociedad
+Se abrió la preview de la rama de auditoría y se inició una campaña nueva descartable. No existía una partida local válida en ese contexto de prueba, por lo que no se tocó una partida del usuario.
+
+Resultado observado:
+- Carga y lobby correctos; inicio de campaña confirmado.
+- Acceso a Sociedad correcto.
+- 16 indicadores mostrados con unidades diferenciadas: índices `/100` y tasas en `%`.
+- Desglose trimestral mostrado: salud 19,4 M; educación y capacitación 5,6 M; vivienda 0,6 M; total adicional 25,6 M.
+- Las 12 acciones sociales aparecieron bloqueadas sin presidencia, como corresponde.
+- No se detectaron errores de consola durante la navegación.
+- En 390 px no se observó desbordamiento general; queda una observación menor sobre descripciones extensas de programas que requiere comprobación visual más exhaustiva.
+
+### PASO y selección de fórmula
+En otra campaña descartable se avanzaron ocho trimestres hasta el año 2, T1. Se comprobaron cuatro precandidaturas y 24 distritos. Se inició el escrutinio y se usó el control «Al final» para completar el conteo.
+
+Resultado de esa ejecución:
+- Candidato de prueba: 26,9% y ganador de la interna.
+- Se pasó a selección de vicepresidente.
+- Se eligió a una persona de la lista partidaria y se llegó a la etapa de fórmula presidencial.
+- La prueba se detuvo antes de las elecciones generales, tal como se había pedido.
+
+Esta prueba demuestra un recorrido exitoso con victoria del jugador en PASO. No demuestra todavía el caso completo de derrota del jugador ni la campaña general/segunda vuelta.
+
+### Simulación fiscal observada
+Durante el avance de ocho trimestres de la prueba PASO, el déficit trimestral informado por la interfaz fue aproximadamente AR$433–438 M. Es una observación de una campaña y no una validación de equilibrio macroeconómico a largo plazo.
+
+### Supabase
+El proyecto `reconstruccion-nacional` está `ACTIVE_HEALTHY`. Los asesores de seguridad, rendimiento y salud devolvieron cero avisos. No hay tablas ni migraciones de RN y no se conectó el juego. La integración queda pendiente hasta definir identidad/autenticación y propiedad de partidas; no conviene habilitar guardados cloud sin ese modelo.
+
+### Git y publicación
+- La rama de auditoría sigue separada de `main`.
+- Se creó `checkpoint/rn-3.2-society-paso-tested-2026-11-23` desde la rama auditada.
+- La comparación con `main` informa divergencia: la rama auditada está 60 commits adelante y 2 detrás. No se debe fusionar a ciegas; hay que revisar esos commits y resolver la base antes de cualquier PR.
+- No se desplegó a producción.
